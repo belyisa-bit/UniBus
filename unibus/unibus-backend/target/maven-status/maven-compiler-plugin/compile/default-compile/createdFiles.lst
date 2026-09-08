@@ -1,0 +1,5 @@
+com\unibus\controller\ParadaController.class
+com\unibus\model\Parada.class
+com\unibus\repository\ParadaRepository.class
+com\unibus\service\ParadaService.class
+unibus_backend\UnibusBackendApplication.class
