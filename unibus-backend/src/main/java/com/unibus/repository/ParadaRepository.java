@@ -11,4 +11,6 @@ public interface ParadaRepository extends JpaRepository<Parada, Long> {
     List<Parada> findByAtivaTrueOrderByNomeAsc();
 
     List<Parada> findDistinctByLinhas_IdAndAtivaTrueOrderByNomeAsc(Long linhaId);
+
+    boolean existsByIdAndLinhas_Id(Long paradaId, Long linhaId);
 }
