@@ -1,6 +1,7 @@
 import Card from "../components/Card/Card";
 import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
+import Badge from "../components/Badge/Badge";
 
 function Home() {
   return (
@@ -10,6 +11,8 @@ function Home() {
       <Card>
         <h2>Linha Centro</h2>
         <p>Saída às 07:30</p>
+
+        <Badge>Disponível</Badge>
 
         <Button>
           Ver horários
