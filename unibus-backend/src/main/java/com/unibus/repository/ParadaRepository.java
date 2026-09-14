@@ -1,9 +1,9 @@
 package com.unibus.repository;
 
-import com.unibus.model.Aviso;
+import com.unibus.model.Parada;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AvisoRepository extends JpaRepository<Aviso, Long> {
+public interface ParadaRepository extends JpaRepository<Parada, Long> {
 }

@@ -1,0 +1,52 @@
+PR: Adiciona entidade Favorito
+
+Branch de origem: feat/backend-entidade-horario
+Branch de destino: develop
+Commit: e0004b4 feat: adiciona entidade Favorito
+
+Objetivo
+
+Adicionar o recurso de favoritos de linhas de ônibus no backend da aplicação UniBus.
+
+Alterações realizadas
+
+- Criada a entidade Favorito.
+- Adicionado o campo linhaId para relacionar o favorito a uma linha.
+- Adicionada a data de criação do favorito.
+- Criada restrição de unicidade para impedir que uma linha seja favoritada mais de uma vez.
+- Criados repository e service para gerenciamento dos favoritos.
+- Criado controller REST para disponibilizar os endpoints da funcionalidade.
+- Adicionada validação para confirmar se a linha existe antes de criar um favorito.
+- Adicionado tratamento para favoritos duplicados e recursos inexistentes.
+
+Endpoints
+
+GET /api/favoritos
+Lista todos os favoritos.
+
+GET /api/favoritos/linha/{linhaId}
+Busca o favorito associado a uma linha.
+
+POST /api/favoritos
+Cria um favorito.
+Exemplo de corpo:
+{
+  "linhaId": 1
+}
+
+DELETE /api/favoritos/{id}
+Remove um favorito pelo ID.
+
+Respostas esperadas
+
+- 201 Created ao criar um favorito.
+- 200 OK nas consultas.
+- 204 No Content ao remover um favorito.
+- 400 Bad Request quando o ID da linha não for informado.
+- 404 Not Found quando a linha ou favorito não existir.
+- 409 Conflict quando a linha já estiver favoritada.
+
+Validação
+
+A análise estática dos arquivos adicionados não apresentou erros.
+A execução dos testes Maven ficou pendente porque o ambiente não possui Java/JAVA_HOME configurado.
