@@ -1,5 +1,6 @@
 import Card from "../components/Card/Card";
 import Button from "../components/Button/Button";
+import Input from "../components/Input/Input";
 
 function Home() {
   return (
@@ -14,6 +15,10 @@ function Home() {
           Ver horários
         </Button>
       </Card>
+    <Input
+        label="Pesquisar linha"
+        placeholder="Digite o nome da linha..."
+      />
     </div>
   );
 }
