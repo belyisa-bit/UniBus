@@ -182,3 +182,40 @@
     border-right-color: var(--border);
   }
 }
+
+#root{
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+}
+
+.home {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px 16px;
+}
+
+.home h1 {
+  margin-bottom: 20px;
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .home {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  .home-content {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
