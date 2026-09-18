@@ -21,5 +21,9 @@ public class Localizacao {
 
     private LocalDateTime dataHora;
 
+    @ManyToOne
+    @JoinColumn(name = "onibus_id", nullable = false)
+    private Onibus onibus;
+
     // getters e setters
 }
