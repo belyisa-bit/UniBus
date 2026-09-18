@@ -1,7 +1,8 @@
-package ...repository;
-
 import ...model.Onibus;
-import org.springframework.data.jpa.repository.JpaRepository;
+import ...service.OnibusService;
 
-public interface OnibusRepository extends JpaRepository<Onibus, Long> {
-}
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
