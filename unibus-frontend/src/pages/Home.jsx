@@ -77,8 +77,6 @@ function Home() {
           </Link>
 
           <Link to="/linhas">Linhas</Link>
-
-          <a href="#horarios">Horários</a>
         </nav>
 
         <div className="header-actions">
