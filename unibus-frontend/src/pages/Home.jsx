@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 import heroImage from "../assets/hero-unibus.png"
@@ -34,19 +34,9 @@ function ClockIcon() {
   )
 }
 
-function UserIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="8" r="3" />
-      <path d="M6 20c0-3.5 2.6-6 6-6s6 2.5 6 6" />
-    </svg>
-  )
-}
-
 function Home() {
   const [busca, setBusca] = useState("")
   const navigate = useNavigate()
-  const sobreDialog = useRef(null)
 
   function pesquisarLinha(event) {
     event.preventDefault()
@@ -62,65 +52,6 @@ function Home() {
 
   return (
     <main className="home">
-      <header className="home-header">
-        <Link to="/" className="brand">
-          <strong>
-            Uni<span>Bus</span>
-          </strong>
-
-          <small>TRANSPORTE UNIVERSITÁRIO</small>
-        </Link>
-
-        <nav className="home-nav" aria-label="Navegação principal">
-          <Link to="/" className="active" aria-current="page">
-            Início
-          </Link>
-
-          <Link to="/linhas">Linhas</Link>
-        </nav>
-
-        <div className="header-actions">
-          <button
-            type="button"
-            className="profile-button"
-            aria-label="Perfil"
-          >
-            <UserIcon />
-          </button>
-
-          <Link to="/linhas" className="enter-button">
-            Entrar
-          </Link>
-        </div>
-      </header>
-
-      <dialog
-        ref={sobreDialog}
-        id="sobre-unibus"
-        className="about-dialog"
-        aria-labelledby="sobre-titulo"
-      >
-        <div className="about-heading">
-          <h2 id="sobre-titulo">Sobre o Uni<span>Bus</span></h2>
-          <form method="dialog">
-            <button type="submit" className="about-close" aria-label="Fechar sobre o UniBus">
-              ×
-            </button>
-          </form>
-        </div>
-        <p>
-          O UniBus é um sistema de transporte universitário pensado para
-          facilitar o caminho entre você e a universidade.
-        </p>
-        <p>
-          Consulte as linhas disponíveis, conheça as rotas e confira os
-          horários para planejar seus deslocamentos com mais praticidade.
-        </p>
-        <p className="about-message">
-          Universidade hoje. Grandes caminhos amanhã.
-        </p>
-      </dialog>
-
       <section className="hero">
         <div className="hero-content">
           <span className="hero-label">
@@ -150,7 +81,6 @@ function Home() {
               </svg>
             </button>
           </form>
-
         </div>
 
         <div className="hero-image-area">
@@ -261,6 +191,9 @@ function Home() {
           espalhadas em grupos e mensagens. Assim, os alunos conseguem se organizar
           melhor, enquanto motoristas e administradores têm mais clareza sobre a
           operação das linhas.
+        </p>
+        <p className="footer-copyright">
+          © 2026 UniBus — Projeto acadêmico. Código sob licença MIT.
         </p>
       </footer>
     </main>

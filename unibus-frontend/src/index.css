@@ -2,11 +2,6 @@
   box-sizing: border-box;
 }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
-}
-
 html {
   width: 100%;
   min-height: 100%;
@@ -32,10 +27,6 @@ input {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-}
-
-a {
-  color: inherit;
 }
 
 button,
