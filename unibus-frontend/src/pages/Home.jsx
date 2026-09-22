@@ -27,11 +27,11 @@ function RouteIcon() {
   )
 }
 
-function ClockIcon() {
+function GraduationCapIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="8" />
-      <path d="M12 8v5l3 2" />
+      <path d="m2 9 10-5 10 5-10 5-10-5Z" />
+      <path d="M6 11v6c3 3 9 3 12 0v-6M22 9v7" />
     </svg>
   )
 }
@@ -134,16 +134,16 @@ function Home() {
           <span className="feature-arrow">›</span>
         </Link>
 
-        <Link to="/linhas" className="feature-card green-card">
+        <Link to="/faculdades" className="feature-card green-card">
           <div className="feature-icon green-icon">
-            <ClockIcon />
+            <GraduationCapIcon />
           </div>
 
-          <h3>Acompanhe horários</h3>
+          <h3>Faculdades atendidas</h3>
 
-          <p>Veja os próximos ônibus.</p>
+          <p>Veja quais instituições possuem linhas disponíveis no UniBus.</p>
 
-          <span className="feature-arrow">›</span>
+          <span className="feature-arrow" aria-hidden="true">›</span>
         </Link>
       </section>
 
