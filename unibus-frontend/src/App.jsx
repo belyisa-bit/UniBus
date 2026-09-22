@@ -1,4 +1,4 @@
-import { Routes, Route, Outlet } from 'react-router-dom'
+import { Routes, Route, Outlet, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import Linhas from './pages/Linhas'
 import Faculdades from './pages/Faculdades'
@@ -24,6 +24,7 @@ function App() {
         <Route path="/rotas" element={<DetalhesLinha />} />
         <Route path="/linhas/:id" element={<DetalhesLinha />} />
         <Route path="/faculdades" element={<Faculdades />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
   )
