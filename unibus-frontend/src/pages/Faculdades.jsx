@@ -1,28 +1,25 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { linhas } from "../data/linhas"
+import { obterFaculdades } from "../services/linhaService"
+import { normalizarTexto } from "../utils/texto"
 import "../styles/Faculdades.css"
 
-const faculdades = [...new Set(linhas.map((linha) => linha.faculdade))].map(
+const faculdades = [...new Set(linhas.flatMap(obterFaculdades))].map(
   (nome) => ({
     nome,
     cidades: [...new Set(linhas
-      .filter((linha) => linha.faculdade === nome)
+      .filter((linha) => obterFaculdades(linha).includes(nome))
       .map((linha) => linha.origem))],
-    // A página de linhas ainda não oferece filtro por instituição.
-    destinoLinhas: "/linhas",
+    destinoLinhas: `/linhas?busca=${encodeURIComponent(nome)}`,
   })
 )
 
-function normalizar(texto) {
-  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-}
-
 function Faculdades() {
   const [busca, setBusca] = useState("")
-  const termo = normalizar(busca.trim())
+  const termo = normalizarTexto(busca.trim())
   const resultados = faculdades.filter((faculdade) =>
-    normalizar(faculdade.nome).includes(termo)
+    normalizarTexto(faculdade.nome).includes(termo)
   )
 
   return (
@@ -70,6 +67,7 @@ function Faculdades() {
                 </span>
                 <h2>{faculdade.nome}</h2>
               </div>
+              <p className="faculdade-location">Recife – PE</p>
               <p className="faculdade-count">
                 {faculdade.cidades.length === 1 ? "1 cidade atendida" : `${faculdade.cidades.length} cidades atendidas`}
               </p>

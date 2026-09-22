@@ -21,9 +21,10 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/linhas" element={<Linhas />} />
+        <Route path="/rotas" element={<DetalhesLinha />} />
+        <Route path="/linhas/:id" element={<DetalhesLinha />} />
         <Route path="/faculdades" element={<Faculdades />} />
       </Route>
-      <Route path="/linhas/:id" element={<DetalhesLinha />} />
     </Routes>
   )
 }

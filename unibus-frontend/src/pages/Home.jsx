@@ -3,8 +3,22 @@ import { Link, useNavigate } from "react-router-dom"
 
 import heroImage from "../assets/hero-unibus.png"
 import { linhas } from "../data/linhas"
+import { obterFaculdades } from "../services/linhaService"
 import { calcularMinutosAteSaida } from "../utils/horarios"
 import "../styles/Home.css"
+
+const chaveCidade = "unibus-cidade"
+const cidadesDisponiveis = [...new Set(linhas.map((linha) => linha.origem))]
+  .sort((a, b) => a.localeCompare(b, "pt-BR"))
+
+function lerCidadeSalva() {
+  try {
+    const cidade = localStorage.getItem(chaveCidade)
+    return cidadesDisponiveis.includes(cidade) ? cidade : ""
+  } catch {
+    return ""
+  }
+}
 
 function BusIcon() {
   return (
@@ -39,6 +53,7 @@ function GraduationCapIcon() {
 function Home() {
   const [busca, setBusca] = useState("")
   const [agora, setAgora] = useState(() => new Date())
+  const [cidade, setCidade] = useState(lerCidadeSalva)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -47,7 +62,20 @@ function Home() {
     return () => clearInterval(interval)
   }, [])
 
+  useEffect(() => {
+    try {
+      if (cidade) {
+        localStorage.setItem(chaveCidade, cidade)
+      } else {
+        localStorage.removeItem(chaveCidade)
+      }
+    } catch {
+      // O filtro continua funcionando se o navegador bloquear o armazenamento.
+    }
+  }, [cidade])
+
   const proximosOnibus = linhas
+    .filter((linha) => cidade && linha.origem === cidade)
     .map((linha) => ({
       ...linha,
       minutosRestantes: calcularMinutosAteSaida(linha.horarioSaida, agora),
@@ -122,7 +150,7 @@ function Home() {
           <span className="feature-arrow">›</span>
         </Link>
 
-        <Link to="/linhas" className="feature-card blue-card">
+        <Link to="/rotas" className="feature-card blue-card">
           <div className="feature-icon blue-icon">
             <RouteIcon />
           </div>
@@ -149,7 +177,27 @@ function Home() {
 
       <section id="horarios" className="next-section">
         <div className="section-heading">
-          <h2>Próximos ônibus</h2>
+          <div className="home-next-heading">
+            <h2>Próximos ônibus</h2>
+            <p className="home-next-destination">Destino: Recife – PE</p>
+          </div>
+
+          <div className="home-city-filter">
+            <label htmlFor="cidade-origem">Sua cidade</label>
+            <select
+              id="cidade-origem"
+              value={cidade}
+              onChange={(event) => {
+                setCidade(event.target.value)
+                setAgora(new Date())
+              }}
+            >
+              <option value="">Selecione sua cidade</option>
+              {cidadesDisponiveis.map((origem) => (
+                <option key={origem} value={origem}>{origem}</option>
+              ))}
+            </select>
+          </div>
 
           <Link to="/linhas">
             Ver todos →
@@ -157,6 +205,13 @@ function Home() {
         </div>
 
         <div className="next-list">
+          {proximosOnibus.length === 0 && (
+            <p className="home-city-message" role="status">
+              {cidade
+                ? "Nenhum ônibus disponível para esta cidade."
+                : "Selecione sua cidade para ver os próximos ônibus."}
+            </p>
+          )}
           {proximosOnibus.map((linha, index) => (
             <Link key={linha.id} to={`/linhas/${linha.id}`} className="bus-row">
               <span className={`line-icon ${index === 0 ? "line-icon-green" : "line-icon-blue"}`}>
@@ -164,7 +219,7 @@ function Home() {
               </span>
 
               <div className="route-info">
-                <strong>{linha.origem} → {linha.faculdade}</strong>
+                <strong>{obterFaculdades(linha).join(" → ")}</strong>
 
                 <span>
                   {linha.minutosRestantes > 0 && "Próximo em: "}

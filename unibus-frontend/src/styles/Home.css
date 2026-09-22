@@ -318,6 +318,18 @@
   letter-spacing: -.8px;
 }
 
+:where(.home) .home-next-destination {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #e3f3e9;
+  color: #17633f;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
 :where(.home) .section-heading a {
   color: #176fb5;
   font-size: 15px;
@@ -356,6 +368,46 @@
   display: grid;
   place-items: center;
   border-radius: 14px;
+}
+
+:where(.home) .home-city-filter {
+  display: grid;
+  gap: 6px;
+  width: min(100%, 280px);
+  margin-left: auto;
+}
+
+:where(.home) .home-city-filter label {
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+:where(.home) .home-city-filter select {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #dce6ed;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--navy);
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+:where(.home) .home-city-filter select:focus {
+  border-color: var(--green);
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+:where(.home) .home-city-message {
+  margin: 0;
+  color: #53687f;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 :where(.home) .line-icon svg {
@@ -489,6 +541,15 @@
 }
 
 @media (max-width: 600px) {
+  :where(.home) .home-next-heading {
+    flex-basis: 100%;
+  }
+
+  :where(.home) .home-city-filter {
+    width: 100%;
+    margin-left: 0;
+  }
+
   :where(.home) .hero {
     padding-top: 32px;
     gap: 24px;
