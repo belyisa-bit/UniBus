@@ -1,7 +1,9 @@
-import { useState } from "react"
+﻿import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 import heroImage from "../assets/hero-unibus.png"
+import { linhas } from "../data/linhas"
+import { calcularMinutosAteSaida } from "../utils/horarios"
 import "../styles/Home.css"
 
 function BusIcon() {
@@ -36,7 +38,22 @@ function ClockIcon() {
 
 function Home() {
   const [busca, setBusca] = useState("")
+  const [agora, setAgora] = useState(() => new Date())
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const interval = setInterval(() => setAgora(new Date()), 30000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const proximosOnibus = linhas
+    .map((linha) => ({
+      ...linha,
+      minutosRestantes: calcularMinutosAteSaida(linha.horarioSaida, agora),
+    }))
+    .sort((a, b) => a.minutosRestantes - b.minutosRestantes || a.id - b.id)
+    .slice(0, 2)
 
   function pesquisarLinha(event) {
     event.preventDefault()
@@ -140,41 +157,24 @@ function Home() {
         </div>
 
         <div className="next-list">
-          <Link to="/linhas/1" className="bus-row">
-            <span className="line-number green-number">
-              01
-            </span>
-
-            <div className="route-info">
-              <strong>Carpina → UNINASSAU</strong>
-
-              <span>
-                Próximo em: <b>10 min</b>
+          {proximosOnibus.map((linha, index) => (
+            <Link key={linha.id} to={`/linhas/${linha.id}`} className="bus-row">
+              <span className={`line-icon ${index === 0 ? "line-icon-green" : "line-icon-blue"}`}>
+                <BusIcon />
               </span>
-            </div>
 
-            <BusIcon />
+              <div className="route-info">
+                <strong>{linha.origem} → {linha.faculdade}</strong>
 
-            <span className="row-arrow">›</span>
-          </Link>
+                <span>
+                  {linha.minutosRestantes > 0 && "Próximo em: "}
+                  <b>{linha.minutosRestantes === 0 ? "Agora" : `${linha.minutosRestantes} min`}</b>
+                </span>
+              </div>
 
-          <Link to="/linhas/2" className="bus-row">
-            <span className="line-number blue-number">
-              02
-            </span>
-
-            <div className="route-info">
-              <strong>UNINASSAU → Carpina</strong>
-
-              <span>
-                Próximo em: <b>22 min</b>
-              </span>
-            </div>
-
-            <BusIcon />
-
-            <span className="row-arrow">›</span>
-          </Link>
+              <span className="row-arrow">›</span>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -185,12 +185,10 @@ function Home() {
         </div>
 
         <p className="footer-description">
-          O UniBus foi criado para facilitar a rotina de estudantes que dependem
-          do transporte universitário. Em um só lugar, é possível consultar linhas,
-          horários, pontos, rotas e o status do transporte, evitando informações
-          espalhadas em grupos e mensagens. Assim, os alunos conseguem se organizar
-          melhor, enquanto motoristas e administradores têm mais clareza sobre a
-          operação das linhas.
+          O UniBus conecta estudantes ao transporte universitário de forma mais simples e organizada,
+          reunindo informações sobre linhas, horários de saída e retorno, pontos, rotas e status do transporte
+          para facilitar o planejamento da ida e volta à faculdade.
+          
         </p>
         <p className="footer-copyright">
           © 2026 UniBus — Projeto acadêmico. Código sob licença MIT.

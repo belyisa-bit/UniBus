@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom"
+import logoUniBus from "../../assets/logo-unibus.png"
 import "./Header.css"
 
 function UserIcon() {
@@ -14,11 +15,11 @@ function Header() {
   return (
     <header className="unibus-header">
       <Link to="/" className="unibus-brand">
-        <strong>
-          Uni<span>Bus</span>
-        </strong>
-
-        <small>TRANSPORTE UNIVERSITÁRIO</small>
+        <img
+          src={logoUniBus}
+          alt="UniBus - Transporte Universitário"
+          className="unibus-logo"
+        />
       </Link>
 
       <nav className="unibus-nav" aria-label="Navegação principal">

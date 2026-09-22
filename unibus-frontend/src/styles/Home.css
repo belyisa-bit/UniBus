@@ -38,7 +38,7 @@
   color: #bed0df;
 }
 
-:where(.home) .feature-icon svg, :where(.home) .bus-row > svg {
+:where(.home) .feature-icon svg, :where(.home) .line-icon svg {
   width: 26px;
   height: 26px;
   fill: none;
@@ -331,7 +331,7 @@
 
 :where(.home) .bus-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 28px 20px;
+  grid-template-columns: auto minmax(0, 1fr) 20px;
   align-items: center;
   gap: clamp(14px, 1.5vw, 24px);
   padding: 18px clamp(16px, 2vw, 30px);
@@ -350,22 +350,26 @@
   box-shadow: 0 8px 24px rgb(34 61 81 / 8%);
 }
 
-:where(.home) .line-number {
+:where(.home) .line-icon {
   width: clamp(50px, 4.4vw, 66px);
   height: clamp(50px, 4.4vw, 66px);
   display: grid;
   place-items: center;
   border-radius: 14px;
-  font-size: clamp(20px, 1.7vw, 26px);
-  font-weight: 850;
 }
 
-:where(.home) .green-number {
+:where(.home) .line-icon svg {
+  width: 30px;
+  height: 30px;
+  stroke: currentColor;
+}
+
+:where(.home) .line-icon-green {
   color: #177847;
   background: #d4eddd;
 }
 
-:where(.home) .blue-number {
+:where(.home) .line-icon-blue {
   color: #176fb5;
   background: #d4e8f7;
 }
@@ -512,9 +516,6 @@
     padding: 16px 12px;
   }
 
-  :where(.home) .bus-row > svg {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
