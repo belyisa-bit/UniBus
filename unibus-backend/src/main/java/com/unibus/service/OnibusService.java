@@ -1,3 +1,11 @@
+package com.unibus.service;
+
+import com.unibus.model.Onibus;
+import com.unibus.repository.OnibusRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class OnibusService {
 

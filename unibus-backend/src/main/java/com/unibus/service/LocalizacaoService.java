@@ -1,3 +1,11 @@
+package com.unibus.service;
+
+import com.unibus.model.Localizacao;
+import com.unibus.repository.LocalizacaoRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class LocalizacaoService {
 
@@ -13,8 +21,7 @@ public class LocalizacaoService {
 
     public Localizacao buscarPorId(Long id) {
         return localizacaoRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Localização não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Localização não encontrada"));
     }
 
     public Localizacao criar(Localizacao localizacao) {
