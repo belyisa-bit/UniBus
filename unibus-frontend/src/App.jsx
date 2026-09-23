@@ -20,8 +20,8 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/linhas" element={<Linhas />} />
+        <Route path="/linhas/:id" element={<DetalhesLinha />} />
       </Route>
-      <Route path="/linhas/:id" element={<DetalhesLinha />} />
     </Routes>
   )
 }

@@ -1,6 +1,8 @@
 package com.unibus.controller;
 
 import com.unibus.model.Linha;
+import com.unibus.model.Localizacao;
+import com.unibus.service.LocalizacaoService;
 import com.unibus.service.LinhaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,11 @@ import java.util.List;
 public class LinhaController {
 
     private final LinhaService linhaService;
+    private final LocalizacaoService localizacaoService;
 
-    public LinhaController(LinhaService linhaService) {
+    public LinhaController(LinhaService linhaService, LocalizacaoService localizacaoService) {
         this.linhaService = linhaService;
+        this.localizacaoService = localizacaoService;
     }
 
     @GetMapping
@@ -30,6 +34,29 @@ public class LinhaController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/{id}/localizacao")
+    public ResponseEntity<LocalizacaoLinhaResponse> buscarLocalizacao(@PathVariable Long id) {
+        if (linhaService.buscarPorId(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var localizacao = localizacaoService.buscarUltimaPorLinha(id);
+        if (localizacao.isEmpty()) return ResponseEntity.noContent().build();
+
+        Localizacao ultima = localizacao.get();
+        return ResponseEntity.ok(new LocalizacaoLinhaResponse(
+                ultima.getLatitude(),
+                ultima.getLongitude(),
+                ultima.getDataHora(),
+                ultima.getOnibus().getIdentificacao()));
+    }
+
+    public record LocalizacaoLinhaResponse(
+            java.math.BigDecimal latitude,
+            java.math.BigDecimal longitude,
+            java.time.LocalDateTime dataHora,
+            String onibus) {}
 
     @PostMapping
     public ResponseEntity<Linha> criar(@Valid @RequestBody Linha linha) {
