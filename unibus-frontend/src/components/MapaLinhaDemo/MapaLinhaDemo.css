@@ -1,0 +1,130 @@
+.mapa-linha-demo {
+  margin-top: 28px;
+  padding: clamp(16px, 3vw, 28px);
+  border: 1px solid #dce6ed;
+  border-radius: 20px;
+  background: #fff;
+  color: #0b2c4d;
+  min-width: 0;
+}
+
+.mapa-demo-heading, .mapa-demo-controles {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mapa-demo-heading h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.mapa-demo-heading > span {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #e3f3e9;
+  color: #17633f;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mapa-demo-descricao, .mapa-demo-aviso {
+  margin: 14px 0;
+  color: #435870;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.mapa-demo-controles {
+  margin-bottom: 16px;
+}
+
+.mapa-demo-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+
+.mapa-demo-legenda li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mapa-demo-amostra {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mapa-linha-demo .mapa-demo-embarque {
+  background: #0b2c4d;
+}
+
+.mapa-linha-demo .mapa-demo-faculdade {
+  background: #23895b;
+}
+
+.mapa-demo-controles button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #cbdbe5;
+  border-radius: 8px;
+  color: #0b2c4d;
+  background: #f3f8fd;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.mapa-linha-demo :is(button, a, .leaflet-container, .leaflet-marker-icon):focus-visible {
+  outline: 3px solid #176fb5;
+  outline-offset: 3px;
+}
+
+.mapa-linha-demo .mapa-demo-canvas {
+  height: 420px;
+  width: 100%;
+  border-radius: 14px;
+  isolation: isolate;
+  z-index: 0;
+  font-family: inherit;
+}
+
+.mapa-demo-ponto {
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 1px 5px #0b2c4d66;
+}
+
+.mapa-demo-onibus {
+  display: grid;
+  place-items: center;
+  border: 2px solid white;
+  border-radius: 10px;
+  background: #0b2c4d;
+  color: white;
+  box-shadow: 0 2px 6px #0b2c4d55;
+}
+
+.mapa-demo-onibus svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+@media (max-width: 680px) {
+  .mapa-linha-demo .mapa-demo-canvas {
+    height: 320px;
+  }
+}
