@@ -17,6 +17,7 @@
 	<description>Backend do Sistema UniBus</description>
 
 	<properties>
+
 		<java.version>25</java.version>
 		<lombok.version>1.18.42</lombok.version>
 	</properties>
