@@ -20,7 +20,28 @@ public class LinhaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Linha>> listarTodas() {
+    public ResponseEntity<List<Linha>> listarTodas(
+            @RequestParam(required = false) String zona,
+            @RequestParam(required = false) String campus) {
+
+        if (zona != null && !zona.isBlank() && campus != null && !campus.isBlank()) {
+            return ResponseEntity.ok(
+                    linhaService.filtrarPorZonaECampus(zona, campus)
+            );
+        }
+
+        if (zona != null && !zona.isBlank()) {
+            return ResponseEntity.ok(
+                    linhaService.filtrarPorZona(zona)
+            );
+        }
+
+        if (campus != null && !campus.isBlank()) {
+            return ResponseEntity.ok(
+                    linhaService.filtrarPorCampus(campus)
+            );
+        }
+
         return ResponseEntity.ok(linhaService.listarTodas());
     }
 

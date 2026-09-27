@@ -31,4 +31,16 @@ public class LinhaService {
     public void deletar(Long id) {
         linhaRepository.deleteById(id);
     }
+
+    public List<Linha> filtrarPorZona(String zona) {
+        return linhaRepository.findByZonaIgnoreCase(zona);
+    }
+
+    public List<Linha> filtrarPorCampus(String campus) {
+        return linhaRepository.findByCampusContainingIgnoreCase(campus);
+    }
+
+    public List<Linha> filtrarPorZonaECampus(String zona, String campus) {
+        return linhaRepository.findByZonaIgnoreCaseAndCampusContainingIgnoreCase(zona, campus);
+    }
 }
