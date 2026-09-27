@@ -31,4 +31,8 @@ public class LinhaService {
     public void deletar(Long id) {
         linhaRepository.deleteById(id);
     }
+    
+public List<Linha> buscarPorNome(String nome) {
+    return linhaRepository.findByNomeContainingIgnoreCase(nome);
+}
 }
