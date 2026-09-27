@@ -19,8 +19,9 @@ public interface LinhaRepository extends JpaRepository<Linha, Long> {
     List<Linha> findByCampusContainingIgnoreCase(String campus);
 
     // Filtro por zona e campus
-    List<Linha> findByZonaIgnoreCaseAndCampusContainingIgnoreCase(
-            String zona,
-            String campus
-    );
+    List<Linha> findByZonaIgnoreCaseAndCampusContainingIgnoreCase(String zona, String campus);
+
+    // Ordenação
+    List<Linha> findAllByOrderByNomeAsc();
+    List<Linha> findAllByOrderByNomeDesc();
 }
