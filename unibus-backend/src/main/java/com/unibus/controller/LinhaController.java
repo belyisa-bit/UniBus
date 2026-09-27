@@ -20,7 +20,13 @@ public class LinhaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Linha>> listarTodas() {
+    public ResponseEntity<List<Linha>> listarTodas(
+            @RequestParam(required = false) String ordem) {
+
+        if (ordem != null && !ordem.isBlank()) {
+            return ResponseEntity.ok(linhaService.ordenarPorNome(ordem));
+        }
+
         return ResponseEntity.ok(linhaService.listarTodas());
     }
 

@@ -9,4 +9,8 @@ import java.util.List;
 public interface LinhaRepository extends JpaRepository<Linha, Long> {
     // Método customizado para buscar por nome ou código
     List<Linha> findByNomeContainingIgnoreCase(String nome);
+
+    List<Linha> findAllByOrderByNomeAsc();
+
+    List<Linha> findAllByOrderByNomeDesc();
 }

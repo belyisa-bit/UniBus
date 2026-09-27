@@ -31,4 +31,12 @@ public class LinhaService {
     public void deletar(Long id) {
         linhaRepository.deleteById(id);
     }
+
+    public List<Linha> ordenarPorNome(String ordem) {
+        if ("desc".equalsIgnoreCase(ordem)) {
+            return linhaRepository.findAllByOrderByNomeDesc();
+        }
+
+        return linhaRepository.findAllByOrderByNomeAsc();
+    }
 }
