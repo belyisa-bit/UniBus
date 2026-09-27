@@ -32,14 +32,3 @@ public class LinhaService {
         linhaRepository.deleteById(id);
     }
 
-public List<Linha> ordenarPorNome(String ordem) {
-        if ("desc".equalsIgnoreCase(ordem)) {
-            return linhaRepository.findAllByOrderByNomeDesc();
-        }
-        return linhaRepository.findAllByOrderByNomeAsc();
-    }
-
-    public List<Linha> buscarPorNome(String nome) {
-        return linhaRepository.findByNomeContainingIgnoreCase(nome);
-    }
-}
