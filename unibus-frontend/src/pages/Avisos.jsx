@@ -36,6 +36,43 @@ function Avisos() {
     setDescricao("")
   }
 
+  function selecionarOpcao(event, setter) {
+    setter(event.currentTarget.value)
+    event.currentTarget.closest("details").open = false
+  }
+
+  function SeletorAviso({ id, label, value, placeholder, options, onChange }) {
+    const textoSelecionado = options.find((option) => option.value === value)?.label
+
+    return (
+      <div className="aviso-campo">
+        <label id={`${id}-label`}>{label}</label>
+
+        <details className="aviso-seletor">
+          <summary aria-labelledby={`${id}-label`}>
+            <span className={value ? "" : "aviso-seletor-placeholder"}>
+              {textoSelecionado || placeholder}
+            </span>
+          </summary>
+
+          <div className="aviso-opcoes" role="listbox" aria-labelledby={`${id}-label`}>
+            {options.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                value={option.value}
+                className={option.value === value ? "selecionado" : ""}
+                onClick={onChange}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </details>
+      </div>
+    )
+  }
+
   return (
     <main className="avisos-page">
       <h1 className="avisos-titulo">Avisos</h1>
@@ -45,41 +82,28 @@ function Avisos() {
       </p>
 
       <form className="aviso-form" onSubmit={enviarAviso}>
-        <div className="aviso-campo">
-          <label htmlFor="linha">Linha</label>
+        <SeletorAviso
+          id="linha"
+          label="Linha"
+          value={linha}
+          placeholder="Selecione a linha"
+          options={linhas.map((item) => ({ value: item.nome, label: item.nome }))}
+          onChange={(event) => selecionarOpcao(event, setLinha)}
+        />
 
-          <select
-            id="linha"
-            value={linha}
-            onChange={(event) => setLinha(event.target.value)}
-            required
-          >
-            <option value="">Selecione a linha</option>
-
-            {linhas.map((item) => (
-              <option key={item.id} value={item.nome}>
-                {item.nome}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="aviso-campo">
-          <label htmlFor="tipo">Tipo do aviso</label>
-
-          <select
-            id="tipo"
-            value={tipo}
-            onChange={(event) => setTipo(event.target.value)}
-            required
-          >
-            <option value="">Selecione o tipo</option>
-            <option value="ATRASO">Atraso</option>
-            <option value="LOTADO">Lotado</option>
-            <option value="PASSOU_AGORA">Passou agora</option>
-            <option value="CANCELADO">Cancelado</option>
-          </select>
-        </div>
+        <SeletorAviso
+          id="tipo"
+          label="Tipo do aviso"
+          value={tipo}
+          placeholder="Selecione o tipo"
+          options={[
+            { value: "ATRASO", label: "Atraso" },
+            { value: "LOTADO", label: "Lotado" },
+            { value: "PASSOU_AGORA", label: "Passou agora" },
+            { value: "CANCELADO", label: "Cancelado" },
+          ]}
+          onChange={(event) => selecionarOpcao(event, setTipo)}
+        />
 
         <div className="aviso-campo">
           <label htmlFor="descricao">Descrição</label>
