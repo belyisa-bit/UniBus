@@ -6,6 +6,7 @@ import DetalhesLinha from './pages/DetalhesLinha'
 import Avisos from './pages/Avisos'
 import Login from './pages/Login'
 import Cadastro from './pages/Cadastro'
+import Entrada from './pages/Entrada'
 import Header from './components/Header/Header'
 import './App.css'
 
@@ -21,17 +22,22 @@ function MainLayout() {
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<Entrada />} />
+
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/cadastro" element={<Cadastro />} />
+
       <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/linhas" element={<Linhas />} />
         <Route path="/rotas" element={<DetalhesLinha />} />
         <Route path="/linhas/:id" element={<DetalhesLinha />} />
         <Route path="/faculdades" element={<Faculdades />} />
         <Route path="/avisos" element={<Avisos />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
