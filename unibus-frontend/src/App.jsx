@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Linhas from './pages/Linhas'
 import Faculdades from './pages/Faculdades'
 import DetalhesLinha from './pages/DetalhesLinha'
+import Avisos from './pages/Avisos'
 import Header from './components/Header/Header'
 import './App.css'
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/rotas" element={<DetalhesLinha />} />
         <Route path="/linhas/:id" element={<DetalhesLinha />} />
         <Route path="/faculdades" element={<Faculdades />} />
+        <Route path="/avisos" element={<Avisos />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

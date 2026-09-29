@@ -27,7 +27,13 @@ function Header() {
           Início
         </NavLink>
 
-        <NavLink to="/linhas">Linhas</NavLink>
+        <NavLink to="/linhas">
+          Linhas
+        </NavLink>
+
+        <NavLink to="/avisos">
+          Avisos
+        </NavLink>
       </nav>
 
       <div className="unibus-header-actions">
