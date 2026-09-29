@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface HorarioRepository extends JpaRepository<Horario, Long> {
+    List<Horario> findByLinhaId(Long linhaId);
     List<Horario> findByLinha_IdAndAtivoTrue(Long linhaId);
-
     List<Horario> findByParada_IdAndAtivoTrue(Long paradaId);
 }

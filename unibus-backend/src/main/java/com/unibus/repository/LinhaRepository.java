@@ -8,6 +8,20 @@ import java.util.List;
 
 @Repository
 public interface LinhaRepository extends JpaRepository<Linha, Long> {
-    List<Linha> findByAtivaTrue();
-    List<Linha> findByNomeContainingIgnoreCaseOrCodigoContainingIgnoreCase(String nome, String codigo);
+
+    // Busca por nome
+    List<Linha> findByNomeContainingIgnoreCase(String nome);
+
+    // Filtro por zona
+    List<Linha> findByZonaIgnoreCase(String zona);
+
+    // Filtro por campus
+    List<Linha> findByCampusContainingIgnoreCase(String campus);
+
+    // Filtro por zona e campus
+    List<Linha> findByZonaIgnoreCaseAndCampusContainingIgnoreCase(String zona, String campus);
+
+    // Ordenação
+    List<Linha> findAllByOrderByNomeAsc();
+    List<Linha> findAllByOrderByNomeDesc();
 }

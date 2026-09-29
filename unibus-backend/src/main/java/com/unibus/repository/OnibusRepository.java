@@ -1,0 +1,12 @@
+package com.unibus.repository;
+
+import com.unibus.model.Onibus;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface OnibusRepository extends JpaRepository<Onibus, Long> {
+    Optional<Onibus> findByIdentificacao(String identificacao);
+}
