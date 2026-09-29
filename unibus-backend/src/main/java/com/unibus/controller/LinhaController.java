@@ -20,7 +20,43 @@ public class LinhaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Linha>> listarTodas() {
+    public ResponseEntity<List<Linha>> listarTodas(
+            @RequestParam(required = false) String zona,
+            @RequestParam(required = false) String campus,
+            @RequestParam(required = false) String ordem,
+            @RequestParam(required = false) String nome) {
+
+        if (zona != null && !zona.isBlank()
+                && campus != null && !campus.isBlank()) {
+            return ResponseEntity.ok(
+                    linhaService.filtrarPorZonaECampus(zona, campus)
+            );
+        }
+
+        if (zona != null && !zona.isBlank()) {
+            return ResponseEntity.ok(
+                    linhaService.filtrarPorZona(zona)
+            );
+        }
+
+        if (campus != null && !campus.isBlank()) {
+            return ResponseEntity.ok(
+                    linhaService.filtrarPorCampus(campus)
+            );
+        }
+
+        if (ordem != null && !ordem.isBlank()) {
+            return ResponseEntity.ok(
+                    linhaService.ordenarPorNome(ordem)
+            );
+        }
+
+        if (nome != null && !nome.isBlank()) {
+            return ResponseEntity.ok(
+                    linhaService.buscarPorNome(nome)
+            );
+        }
+
         return ResponseEntity.ok(linhaService.listarTodas());
     }
 
@@ -34,7 +70,10 @@ public class LinhaController {
     @PostMapping
     public ResponseEntity<Linha> criar(@Valid @RequestBody Linha linha) {
         Linha novaLinha = linhaService.salvar(linha);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novaLinha);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(novaLinha);
     }
 
     @DeleteMapping("/{id}")
@@ -42,7 +81,9 @@ public class LinhaController {
         if (linhaService.buscarPorId(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
         linhaService.deletar(id);
+
         return ResponseEntity.noContent().build();
     }
 }

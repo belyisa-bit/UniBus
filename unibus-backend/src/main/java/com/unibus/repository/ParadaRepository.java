@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface ParadaRepository extends JpaRepository<Parada, Long> {
+    List<Parada> findByAtivaTrue();
+    List<Parada> findByNomeContainingIgnoreCase(String nome);
     List<Parada> findByAtivaTrueOrderByNomeAsc();
-
     List<Parada> findDistinctByLinhas_IdAndAtivaTrueOrderByNomeAsc(Long linhaId);
-
     boolean existsByIdAndLinhas_Id(Long paradaId, Long linhaId);
 }

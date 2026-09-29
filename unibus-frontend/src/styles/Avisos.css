@@ -1,0 +1,168 @@
+.avisos-page {
+  width: min(100% - 48px, 760px);
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+.avisos-titulo {
+  margin-bottom: 8px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.avisos-subtitulo {
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.aviso-form {
+  width: 100%;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.aviso-campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.aviso-campo label {
+  margin-bottom: 7px;
+  font-weight: 600;
+}
+
+.aviso-campo input,
+.aviso-campo textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  background: #fff;
+}
+
+.aviso-seletor {
+  width: 100%;
+}
+
+.aviso-seletor summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 11px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  list-style: none;
+}
+
+.aviso-seletor summary::-webkit-details-marker {
+  display: none;
+}
+
+.aviso-seletor summary::after {
+  content: "⌄";
+  color: #2e8b57;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.aviso-seletor[open] summary {
+  border-color: #2e8b57;
+  border-radius: 8px 8px 0 0;
+}
+
+.aviso-seletor-placeholder {
+  color: #777;
+}
+
+.aviso-opcoes {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #2e8b57;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  background: #fff;
+}
+
+.aviso-opcoes button {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: #fff;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.aviso-opcoes button:hover,
+.aviso-opcoes button.selecionado {
+  background: #eef8f1;
+  color: #216d45;
+}
+
+.aviso-campo input:focus,
+.aviso-campo textarea:focus {
+  outline: none;
+  border-color: #2e8b57;
+}
+
+.aviso-campo textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.aviso-botao {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 22px;
+  background: #2e8b57;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.aviso-botao:hover {
+  opacity: 0.9;
+}
+
+.avisos-enviados {
+  margin-top: 48px;
+}
+
+.avisos-enviados h2 {
+  margin-bottom: 20px;
+}
+
+.aviso-card {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+}
+
+.aviso-card h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.aviso-card p {
+  margin: 0 0 12px;
+  color: #555;
+}
+
+.aviso-card small {
+  color: #777;
+}

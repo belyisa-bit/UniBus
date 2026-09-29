@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface AvisoRepository extends JpaRepository<Aviso, Long> {
-    List<Aviso> findByLinhaIdAndAtivoTrueOrderByDataHoraDesc(Long linhaId);
     List<Aviso> findByAtivoTrueOrderByDataHoraDesc();
+    List<Aviso> findByLinhaIdAndAtivoTrueOrderByDataHoraDesc(Long linhaId);
 }
