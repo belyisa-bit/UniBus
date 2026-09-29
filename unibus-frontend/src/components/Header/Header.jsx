@@ -45,7 +45,7 @@ function Header() {
           <UserIcon />
         </button>
 
-        <Link to="/linhas" className="unibus-enter-button">
+        <Link to="/login" className="unibus-enter-button">
           Entrar
         </Link>
       </div>
