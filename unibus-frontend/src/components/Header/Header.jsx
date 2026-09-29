@@ -23,7 +23,7 @@ function Header() {
       </Link>
 
       <nav className="unibus-nav" aria-label="Navegação principal">
-        <NavLink to="/" end>
+        <NavLink to="/home" end>
           Início
         </NavLink>
 
@@ -44,10 +44,6 @@ function Header() {
         >
           <UserIcon />
         </button>
-
-        <Link to="/login" className="unibus-enter-button">
-          Entrar
-        </Link>
       </div>
     </header>
   )

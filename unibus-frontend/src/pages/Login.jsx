@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom"
+import logoUniBus from "../assets/logo-unibus.png"
 import "../styles/Login.css"
 
 function Login() {
   return (
     <main className="login-page">
       <section className="login-card">
+
+        <img
+          src={logoUniBus}
+          alt="UniBus - Transporte Universitário"
+          className="login-logo"
+        />
+
         <h1>Entrar</h1>
 
         <p className="login-subtitle">
@@ -45,6 +53,7 @@ function Login() {
             Cadastre aqui
           </Link>
         </p>
+
       </section>
     </main>
   )
