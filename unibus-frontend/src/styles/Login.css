@@ -162,4 +162,65 @@
     width: 190px;
     margin-bottom: 24px;
   }
+  .login-erro {
+  margin: -4px 0 16px;
+
+  padding: 10px 12px;
+
+  border-radius: 8px;
+
+  background: rgba(190, 50, 50, 0.08);
+  color: #b83232;
+
+  font-size: 14px;
+  text-align: center;
+}
+
+.login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-sucesso-card {
+  text-align: center;
+}
+
+.login-sucesso-icon {
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 20px;
+
+  border-radius: 50%;
+
+  background: rgba(46, 139, 87, 0.12);
+  color: #2e8b57;
+
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.login-sucesso-card h1 {
+  margin-bottom: 10px;
+
+  color: #202b26;
+}
+
+.login-sucesso-texto {
+  margin: 0;
+
+  color: #555;
+  font-size: 16px;
+}
+
+.login-sucesso-redirecionamento {
+  margin: 18px 0 0;
+
+  color: #2e8b57;
+  font-size: 14px;
+}
 }
