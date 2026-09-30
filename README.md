@@ -424,7 +424,7 @@ A aplicação publicada corresponde ao frontend. Para testar os endpoints do bac
 | Gabrielly Carneiro | gabriellyrcarneiros@gmail.com |componentes de layout e configuração de rotas |
 | Geovanna Almeida | geovannaalmeidaa408@gmail.com | Hooks e services de dados do frontend |
 | Josinaldo Xavier | josinaldoxavier215@gmail.com | Apoio geral no desenvolvimento |
-| Gabriela Sabino | gabrielaaraujo@gmail.com | Criação de paginas no frontend |
+| Gabriela Sabino | gabrielasabinopinho2016@gmail.com | Criação de paginas no frontend |
 
 
 
