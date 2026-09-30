@@ -1,86 +1,165 @@
 .cadastro-page {
-  min-height: calc(100vh - 90px);
+  min-height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   padding: 40px 20px;
+
   box-sizing: border-box;
+
+  background: #ffffff;
 }
 
 .cadastro-card {
   width: 100%;
   max-width: 430px;
-  padding: 32px;
-  background: #fff;
+
+  padding: 34px 36px 30px;
+
+  background: #ffffff;
+
   border: 1px solid #e5e5e5;
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+
   box-sizing: border-box;
 }
 
+/* LOGO */
+
+.cadastro-logo {
+  display: block;
+
+  width: 210px;
+  height: auto;
+
+  margin: 0 auto 28px;
+}
+
+/* TÍTULO */
+
 .cadastro-card h1 {
   margin: 0 0 8px;
+
   font-size: 30px;
+  font-weight: 700;
+
+  color: #202b26;
 }
 
 .cadastro-subtitle {
   margin: 0 0 28px;
+
   color: #666;
+  font-size: 15px;
 }
+
+/* CAMPOS */
 
 .cadastro-field {
   display: flex;
   flex-direction: column;
+
   margin-bottom: 18px;
 }
 
 .cadastro-field label {
   margin-bottom: 7px;
+
+  font-size: 15px;
   font-weight: 600;
+
+  color: #303a35;
 }
 
 .cadastro-field input {
   width: 100%;
+
   box-sizing: border-box;
+
   padding: 12px;
+
   border: 1px solid #ccc;
   border-radius: 8px;
+
   font-size: 15px;
+  font-family: inherit;
+
+  background: #ffffff;
 }
 
 .cadastro-field input:focus {
   outline: none;
+
   border-color: #2e8b57;
+
+  box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.08);
 }
+
+/* BOTÃO */
 
 .cadastro-button {
   width: 100%;
+
   padding: 12px;
+
   border: none;
   border-radius: 8px;
+
   background: #2e8b57;
-  color: #fff;
+  color: #ffffff;
+
   font-size: 16px;
   font-weight: 600;
+
   cursor: pointer;
+
+  transition: background 0.2s ease;
 }
 
 .cadastro-button:hover {
-  opacity: 0.9;
+  background: #26794b;
 }
+
+/* LOGIN */
 
 .cadastro-login {
   margin: 22px 0 0;
+
   text-align: center;
+
   color: #666;
+  font-size: 14px;
 }
 
 .cadastro-login a {
   color: #2e8b57;
+
   font-weight: 600;
+
   text-decoration: none;
 }
 
 .cadastro-login a:hover {
   text-decoration: underline;
-} 
+}
+
+/* CELULAR */
+
+@media (max-width: 500px) {
+  .cadastro-page {
+    padding: 25px 18px;
+  }
+
+  .cadastro-card {
+    padding: 28px 24px;
+  }
+
+  .cadastro-logo {
+    width: 190px;
+    margin-bottom: 24px;
+  }
+}
