@@ -25,7 +25,6 @@
   object-position: center;
 }
 
-/* Deixa a transição mais branca no lado do texto */
 .entrada-overlay {
   position: absolute;
   inset: 0;
@@ -41,7 +40,6 @@
     );
 }
 
-/* Conteúdo */
 .entrada-content {
   position: relative;
   z-index: 2;
@@ -153,79 +151,105 @@
 
 .entrada-button-secondary:hover {
   background: #ffffff;
-  /* RESPONSIVIDADE PARA CELULAR */
+}
+
+
+/* =========================
+   RESPONSIVO - CELULAR
+   ========================= */
+
 @media (max-width: 768px) {
   .entrada-page {
     min-height: 100svh;
-    align-items: center;
+    height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    background: #ffffff;
+  }
+
+  .entrada-background {
+    height: 58%;
+    bottom: auto;
+    overflow: hidden;
   }
 
   .entrada-background-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 28% center;
+    object-position: center center;
   }
 
   .entrada-overlay {
     background:
       linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0.05) 0%,
-        rgba(255, 255, 255, 0.18) 35%,
-        rgba(255, 255, 255, 0.78) 62%,
-        rgba(255, 255, 255, 0.97) 82%,
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0) 45%,
+        rgba(255, 255, 255, 0.65) 72%,
         #ffffff 100%
       );
   }
 
   .entrada-content {
+    width: 100%;
     max-width: 100%;
-    padding: 40px 24px;
+    padding: 0 24px 55px;
+    box-sizing: border-box;
+
     align-items: center;
+    text-align: center;
   }
 
   .entrada-brand {
     width: 100%;
     max-width: 360px;
-    text-align: center;
   }
 
   .entrada-label {
+    margin-bottom: 8px;
     font-size: 10px;
     letter-spacing: 1.5px;
-    margin-bottom: 10px;
   }
 
   .entrada-brand h1 {
-    font-size: 54px;
+    font-size: 52px;
     line-height: 0.95;
     letter-spacing: -2px;
   }
 
   .entrada-brand p {
-    margin-top: 16px;
+    margin: 14px 0 0;
     font-size: 18px;
-    line-height: 1.35;
+    line-height: 1.3;
   }
 
   .entrada-actions {
     width: 100%;
     max-width: 360px;
-    margin-top: 32px;
-    gap: 12px;
+    margin-top: 26px;
+    gap: 10px;
   }
 
   .entrada-button {
     height: 52px;
     font-size: 16px;
+    border-radius: 10px;
   }
 }
 
-/* CELULARES MENORES */
+
+/* =========================
+   CELULARES MENORES
+   ========================= */
+
 @media (max-width: 430px) {
+  .entrada-background {
+    height: 55%;
+  }
+
   .entrada-content {
-    padding: 32px 18px;
+    padding: 0 20px 42px;
   }
 
   .entrada-brand {
@@ -242,6 +266,33 @@
 
   .entrada-actions {
     max-width: 340px;
+    margin-top: 24px;
   }
 }
+
+
+/* =========================
+   CELULARES MUITO PEQUENOS
+   ========================= */
+
+@media (max-width: 360px) {
+  .entrada-background {
+    height: 52%;
+  }
+
+  .entrada-content {
+    padding-bottom: 30px;
+  }
+
+  .entrada-brand h1 {
+    font-size: 44px;
+  }
+
+  .entrada-brand p {
+    font-size: 16px;
+  }
+
+  .entrada-button {
+    height: 48px;
+  }
 }
