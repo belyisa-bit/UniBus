@@ -418,13 +418,13 @@ A aplicação publicada corresponde ao frontend. Para testar os endpoints do bac
 
 ## Equipe
 
-| Integrante | Contato | Principais contribuições |
+| Integrante | Matrícula | Principais contribuições |
 |---|---|---|
-| Isabelle Victória | isabellevic69@gmail.com | Estruturação do projeto e Modelagem e desenvolvimento do backend | 
-| Gabrielly Carneiro | gabriellyrcarneiros@gmail.com |componentes de layout e configuração de rotas |
-| Geovanna Almeida | geovannaalmeidaa408@gmail.com | Hooks e services de dados do frontend |
-| Josinaldo Xavier | josinaldoxavier215@gmail.com | Apoio geral no desenvolvimento |
-| Gabriela Sabino | gabrielasabinopinho2016@gmail.com | Criação de paginas no frontend |
+| Isabelle Victória | 01808806 | Estruturação do projeto e Modelagem e desenvolvimento do backend | 
+| Gabrielly Carneiro | 01797929 |componentes de layout e configuração de rotas |
+| Geovanna Almeida | 01815451 | Hooks e services de dados do frontend |
+| Josinaldo Xavier | 01823400  | Apoio geral no desenvolvimento |
+| Gabriela Sabino | 01660021 | Criação de paginas no frontend |
 
 
 
