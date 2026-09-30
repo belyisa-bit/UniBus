@@ -25,7 +25,6 @@
   object-position: center;
 }
 
-/* Deixa a transição mais branca no lado do texto */
 .entrada-overlay {
   position: absolute;
   inset: 0;
@@ -41,7 +40,6 @@
     );
 }
 
-/* Conteúdo */
 .entrada-content {
   position: relative;
   z-index: 2;
@@ -153,11 +151,24 @@
 
 .entrada-button-secondary:hover {
   background: #ffffff;
-  /* RESPONSIVIDADE PARA CELULAR */
+}
+
+
+/* =========================
+   CELULAR
+   ========================= */
+
 @media (max-width: 768px) {
+
   .entrada-page {
     min-height: 100svh;
+    height: 100svh;
     align-items: center;
+  }
+
+  .entrada-background {
+    width: 100%;
+    height: 100%;
   }
 
   .entrada-background-image {
@@ -172,39 +183,46 @@
       linear-gradient(
         90deg,
         rgba(255, 255, 255, 0.05) 0%,
-        rgba(255, 255, 255, 0.18) 35%,
-        rgba(255, 255, 255, 0.78) 62%,
-        rgba(255, 255, 255, 0.97) 82%,
+        rgba(255, 255, 255, 0.18) 30%,
+        rgba(255, 255, 255, 0.70) 55%,
+        rgba(255, 255, 255, 0.94) 75%,
         #ffffff 100%
       );
   }
 
   .entrada-content {
+    width: 100%;
     max-width: 100%;
+
     padding: 40px 24px;
+
     align-items: center;
+    justify-content: center;
+
+    text-align: center;
   }
 
   .entrada-brand {
     width: 100%;
     max-width: 360px;
-    text-align: center;
   }
 
   .entrada-label {
+    margin-bottom: 10px;
+
     font-size: 10px;
     letter-spacing: 1.5px;
-    margin-bottom: 10px;
   }
 
   .entrada-brand h1 {
-    font-size: 54px;
+    font-size: 56px;
     line-height: 0.95;
     letter-spacing: -2px;
   }
 
   .entrada-brand p {
     margin-top: 16px;
+
     font-size: 18px;
     line-height: 1.35;
   }
@@ -212,7 +230,9 @@
   .entrada-actions {
     width: 100%;
     max-width: 360px;
+
     margin-top: 32px;
+
     gap: 12px;
   }
 
@@ -222,10 +242,15 @@
   }
 }
 
-/* CELULARES MENORES */
+
+/* =========================
+   CELULARES PEQUENOS
+   ========================= */
+
 @media (max-width: 430px) {
+
   .entrada-content {
-    padding: 32px 18px;
+    padding: 30px 18px;
   }
 
   .entrada-brand {
@@ -244,4 +269,31 @@
     max-width: 340px;
   }
 }
+
+
+/* =========================
+   CELULARES MUITO PEQUENOS
+   ========================= */
+
+@media (max-width: 360px) {
+
+  .entrada-content {
+    padding: 24px 16px;
+  }
+
+  .entrada-brand h1 {
+    font-size: 44px;
+  }
+
+  .entrada-brand p {
+    font-size: 16px;
+  }
+
+  .entrada-actions {
+    margin-top: 26px;
+  }
+
+  .entrada-button {
+    height: 48px;
+  }
 }
