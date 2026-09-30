@@ -19,16 +19,19 @@ function Login() {
     setCarregando(true)
 
     try {
-      const resposta = await fetch("http://localhost:8081/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          senha,
-        }),
-      })
+      const resposta = await fetch(
+        "https://unibus-backend-55sx.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            senha,
+          }),
+        }
+      )
 
       if (!resposta.ok) {
         setErro("E-mail ou senha inválidos.")
