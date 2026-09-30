@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom"
+import logoUniBus from "../assets/logo-unibus.png"
 import "../styles/Cadastro.css"
 
 function Cadastro() {
   return (
     <main className="cadastro-page">
       <section className="cadastro-card">
+
+        <img
+          src={logoUniBus}
+          alt="UniBus - Transporte Universitário"
+          className="cadastro-logo"
+        />
+
         <h1>Criar cadastro</h1>
 
         <p className="cadastro-subtitle">
@@ -69,6 +77,7 @@ function Cadastro() {
             Entrar
           </Link>
         </p>
+
       </section>
     </main>
   )
