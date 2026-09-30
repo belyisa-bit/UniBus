@@ -153,4 +153,95 @@
 
 .entrada-button-secondary:hover {
   background: #ffffff;
+  /* RESPONSIVIDADE PARA CELULAR */
+@media (max-width: 768px) {
+  .entrada-page {
+    min-height: 100svh;
+    align-items: center;
+  }
+
+  .entrada-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 28% center;
+  }
+
+  .entrada-overlay {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.18) 35%,
+        rgba(255, 255, 255, 0.78) 62%,
+        rgba(255, 255, 255, 0.97) 82%,
+        #ffffff 100%
+      );
+  }
+
+  .entrada-content {
+    max-width: 100%;
+    padding: 40px 24px;
+    align-items: center;
+  }
+
+  .entrada-brand {
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+  }
+
+  .entrada-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+
+  .entrada-brand h1 {
+    font-size: 54px;
+    line-height: 0.95;
+    letter-spacing: -2px;
+  }
+
+  .entrada-brand p {
+    margin-top: 16px;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+
+  .entrada-actions {
+    width: 100%;
+    max-width: 360px;
+    margin-top: 32px;
+    gap: 12px;
+  }
+
+  .entrada-button {
+    height: 52px;
+    font-size: 16px;
+  }
+}
+
+/* CELULARES MENORES */
+@media (max-width: 430px) {
+  .entrada-content {
+    padding: 32px 18px;
+  }
+
+  .entrada-brand {
+    max-width: 340px;
+  }
+
+  .entrada-brand h1 {
+    font-size: 48px;
+  }
+
+  .entrada-brand p {
+    font-size: 17px;
+  }
+
+  .entrada-actions {
+    max-width: 340px;
+  }
+}
 }
