@@ -417,11 +417,11 @@ O `onibus.id` deve corresponder a um ônibus existente no banco. A latitude e a 
 
 | Integrante | Matrícula | Principais contribuições |
 |---|---|---|
-| Isabelle Victória | 01808806 | Estruturação do projeto e Modelagem e desenvolvimento do backend | 
-| Gabrielly Carneiro | 01797929 |componentes de layout e configuração de rotas |
-| Geovanna Almeida | 01815451 | Hooks e services de dados do frontend |
+| Isabelle Victória | 01808806 | Estruturação do projeto, modelagem e desenvolvimento do backend | 
+| Gabrielly Carneiro | 01797929 | Componentes de layout e configuração de rotas | 
+| Geovanna Almeida | 01815451 | Criação de paginas no frontend | 
 | Josinaldo Xavier | 01823400  | Apoio geral no desenvolvimento |
-| Gabriela Sabino | 01660021 | Criação de paginas no frontend |
+| Gabriela Sabino | 01660021 | Hooks e services de dados do frontend e backend |
 
 
 
