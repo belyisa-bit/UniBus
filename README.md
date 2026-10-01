@@ -401,8 +401,6 @@ O `onibus.id` deve corresponder a um ônibus existente no banco. A latitude e a 
 | Frontend | [unibus-frontend-five.vercel.app](https://unibus-frontend-five.vercel.app/) | Publicado na Vercel |
 | Backend | https://unibus-backend-55sx.onrender.com/ |Publicado na Render |
 
-A aplicação publicada corresponde ao frontend. Para testar os endpoints do backend, execute-o localmente ou utilize um endereço de deploy caso ele seja disponibilizado futuramente.
-
 ---
 
 ## Limitações e próximos passos
