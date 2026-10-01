@@ -405,7 +405,6 @@ O `onibus.id` deve corresponder a um ônibus existente no banco. A latitude e a 
 
 ## Limitações e próximos passos
 
-- A interface do frontend ainda não consome a API Spring Boot; as páginas de linhas usam dados locais.
 - O simulador GPS gera coordenadas fictícias e não representa a localização real dos ônibus.
 - A API municipal de localização depende da disponibilidade de dados oficiais dos municípios.
 - O banco H2 está configurado em memória para desenvolvimento; os dados não são persistidos após reinicializações.
