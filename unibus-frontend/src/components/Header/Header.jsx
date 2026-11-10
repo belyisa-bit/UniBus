@@ -23,11 +23,17 @@ function Header() {
       </Link>
 
       <nav className="unibus-nav" aria-label="Navegação principal">
-        <NavLink to="/" end>
+        <NavLink to="/home" end>
           Início
         </NavLink>
 
-        <NavLink to="/linhas">Linhas</NavLink>
+        <NavLink to="/linhas">
+          Linhas
+        </NavLink>
+
+        <NavLink to="/avisos">
+          Avisos
+        </NavLink>
       </nav>
 
       <div className="unibus-header-actions">
@@ -38,10 +44,6 @@ function Header() {
         >
           <UserIcon />
         </button>
-
-        <Link to="/linhas" className="unibus-enter-button">
-          Entrar
-        </Link>
       </div>
     </header>
   )

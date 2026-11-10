@@ -1,14 +1,20 @@
 package com.unibus.model;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "linhas")
@@ -30,4 +36,13 @@ public class Linha {
     private String empresa;
 
     private Boolean ativa = true;
+
+    private String zona;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "linha_campus",
+            joinColumns = @JoinColumn(name = "linha_id")
+    )
+    private List<String> campus = new ArrayList<>();
 }
