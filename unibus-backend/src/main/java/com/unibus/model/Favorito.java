@@ -1,12 +1,7 @@
 package com.unibus.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,11 +11,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-        name = "favoritos",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uk_favorito_linha",
-                columnNames = "linha_id"
-        )
+    name = "favoritos",
+    uniqueConstraints = @UniqueConstraint(
+        name = "uk_favorito_usuario_linha",
+        columnNames = {"usuario_id", "linha_id"}
+    )
 )
 @Data
 @NoArgsConstructor
@@ -34,6 +29,11 @@ public class Favorito {
     @NotNull(message = "O ID da linha é obrigatório")
     @Column(name = "linha_id", nullable = false)
     private Long linhaId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonIgnoreProperties({"senha"})
+    private Usuario usuario;
 
     @Column(nullable = false)
     private LocalDateTime dataCriacao = LocalDateTime.now();

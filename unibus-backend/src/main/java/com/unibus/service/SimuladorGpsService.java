@@ -2,9 +2,10 @@ package com.unibus.service;
 
 import com.unibus.model.Localizacao;
 import com.unibus.model.Onibus;
+import com.unibus.model.Linha;
+import com.unibus.repository.LinhaRepository;
 import com.unibus.repository.LocalizacaoRepository;
 import com.unibus.repository.OnibusRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,14 @@ public class SimuladorGpsService {
 
     private final LocalizacaoRepository localizacaoRepository;
     private final OnibusRepository onibusRepository;
+    private final LinhaRepository linhaRepository;
 
     public SimuladorGpsService(LocalizacaoRepository localizacaoRepository,
-                               OnibusRepository onibusRepository) {
+                               OnibusRepository onibusRepository,
+                               LinhaRepository linhaRepository) {
         this.localizacaoRepository = localizacaoRepository;
         this.onibusRepository = onibusRepository;
+        this.linhaRepository = linhaRepository;
     }
 
     private final Random random = new Random();
@@ -50,8 +54,15 @@ public class SimuladorGpsService {
                     novoOnibus.setIdentificacao(IDENTIFICACAO_ONIBUS_SIMULADO);
                     novoOnibus.setPlaca("SIM-0001");
                     novoOnibus.setAtivo(true);
-                    return onibusRepository.save(novoOnibus);
+                    return novoOnibus;
                 });
+
+        if (onibus.getLinha() == null) {
+            Linha linha = linhaRepository.findAll().stream().findFirst().orElse(null);
+            if (linha == null) return;
+            onibus.setLinha(linha);
+        }
+        onibus = onibusRepository.save(onibus);
 
         Localizacao novaLocalizacao = new Localizacao();
         novaLocalizacao.setLatitude(BigDecimal.valueOf(latitudeBase));

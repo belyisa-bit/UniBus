@@ -1,8 +1,10 @@
 package com.unibus.service;
 
 import com.unibus.model.Localizacao;
+import com.unibus.model.Linha;
 import com.unibus.model.Onibus;
 import com.unibus.repository.LocalizacaoRepository;
+import com.unibus.repository.LinhaRepository;
 import com.unibus.repository.OnibusRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,12 +30,18 @@ class SimuladorGpsServiceTest {
     @Mock
     private OnibusRepository onibusRepository;
 
+    @Mock
+    private LinhaRepository linhaRepository;
+
     @InjectMocks
     private SimuladorGpsService simuladorGpsService;
 
     @Test
     void deveSalvarLocalizacaoComOnibusPadrao() {
         when(onibusRepository.findByIdentificacao("ONIBUS_SIMULADO")).thenReturn(Optional.empty());
+        Linha linha = new Linha();
+        linha.setId(1L);
+        when(linhaRepository.findAll()).thenReturn(java.util.List.of(linha));
         when(onibusRepository.save(any(Onibus.class))).thenAnswer(invocation -> {
             Onibus onibus = invocation.getArgument(0);
             onibus.setId(10L);

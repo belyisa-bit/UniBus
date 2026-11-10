@@ -31,6 +31,8 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/home" element={<Home />} />
         <Route path="/linhas" element={<Linhas />} />
+        <Route path="/linhas/:id" element={<DetalhesLinha />} />
+      </Route>
         <Route path="/rotas" element={<DetalhesLinha />} />
         <Route path="/linhas/:id" element={<DetalhesLinha />} />
         <Route path="/faculdades" element={<Faculdades />} />
