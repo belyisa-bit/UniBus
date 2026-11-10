@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { unibusService } from "../services/unibusService"
+import MapaLinhaDemo from "../components/MapaLinhaDemo/MapaLinhaDemo"
 import "./Linhas.css"
 
 function DetalhesLinha() {
   const { id } = useParams()
   const [linha, setLinha] = useState(null)
   const [localizacao, setLocalizacao] = useState(null)
+  const [gpsStatus, setGpsStatus] = useState("aguardando")
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState("")
 
@@ -26,17 +28,40 @@ function DetalhesLinha() {
   useEffect(() => {
     let ativo = true
     const atualizarLocalizacao = () => {
+      setGpsStatus("atualizando")
       unibusService.getLocalizacaoPorLinha(id)
-        .then(({ data }) => { if (ativo) setLocalizacao(data ?? null) })
-        .catch(() => { if (ativo) setLocalizacao(null) })
+        .then(({ data }) => {
+          if (!ativo) return
+          setLocalizacao(data ?? null)
+          setGpsStatus(data ? "conectado" : "aguardando")
+        })
+        .catch(() => {
+          if (!ativo) return
+          setGpsStatus("offline")
+        })
     }
     atualizarLocalizacao()
-    const intervalo = window.setInterval(atualizarLocalizacao, 10000)
+    const intervalo = window.setInterval(atualizarLocalizacao, 5000)
     return () => {
       ativo = false
       window.clearInterval(intervalo)
     }
   }, [id])
+
+  const leituraAtualizada = localizacao?.dataHora
+    ? new Date(localizacao.dataHora)
+    : null
+  const leituraExpirada = leituraAtualizada
+    ? Date.now() - leituraAtualizada.getTime() > 30000
+    : false
+
+  function textoStatusGps() {
+    if (leituraExpirada) return "Última posição desatualizada"
+    if (gpsStatus === "conectado") return "GPS ao vivo conectado"
+    if (gpsStatus === "atualizando") return "Atualizando posição..."
+    if (gpsStatus === "offline") return "Sem conexão com o GPS"
+    return "Aguardando sinal GPS..."
+  }
 
   return (
     <main className="linhas-page">
@@ -52,16 +77,26 @@ function DetalhesLinha() {
             {linha.ativa === false ? "Inativa" : "Em operação"}
           </span>
           <section className="linha-gps" aria-live="polite">
-            <h2>Localização do ônibus</h2>
+            <div className="linha-gps-heading">
+              <div>
+                <p className="linha-gps-eyebrow">RASTREAMENTO EM TEMPO REAL</p>
+                <h2>Localização do ônibus</h2>
+              </div>
+              <span className={`gps-indicator gps-${leituraExpirada ? "stale" : gpsStatus}`}>
+                <span aria-hidden="true" />
+                {textoStatusGps()}
+              </span>
+            </div>
             {localizacao ? (
               <>
-                <p>Ônibus: {localizacao.onibus}</p>
-                <p>Latitude: {localizacao.latitude} · Longitude: {localizacao.longitude}</p>
-                <p><a href={`https://www.google.com/maps?q=${localizacao.latitude},${localizacao.longitude}`} target="_blank" rel="noreferrer">Abrir posição no mapa</a></p>
-                <p>Atualizado em: {new Date(localizacao.dataHora).toLocaleString("pt-BR")}</p>
-                <small>Posição gerada pelo simulador GPS.</small>
+                <div className="gps-reading">
+                  <p><strong>{localizacao.onibus || "Ônibus em circulação"}</strong></p>
+                  <p>Latitude {localizacao.latitude} · Longitude {localizacao.longitude}</p>
+                  <p>Última leitura: {leituraAtualizada?.toLocaleTimeString("pt-BR")}</p>
+                </div>
               </>
-            ) : <p>Aguardando localização GPS para esta linha...</p>}
+            ) : <p>Aguardando localização GPS para esta linha. O mapa aparecerá assim que chegar a primeira leitura.</p>}
+            <MapaLinhaDemo linha={linha} localizacao={localizacao} />
           </section>
         </article>
       )}
