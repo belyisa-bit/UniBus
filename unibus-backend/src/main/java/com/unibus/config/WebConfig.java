@@ -12,6 +12,19 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD")
+                .allowedOrigins(
+                        "http://localhost:5173",
+                        "http://127.0.0.1:5173",
+                        "https://unibus-frontend-five.vercel.app",
+                        "https://s-frontend-five.vercel.app"
+                )
+                .allowedMethods(
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE",
+                        "OPTIONS"
+                )
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
