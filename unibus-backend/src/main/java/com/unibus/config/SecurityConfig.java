@@ -24,12 +24,18 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final List<String> allowedOrigins;
+    private final List<String> allowedOriginPatterns;
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            @Value("${unibus.cors.allowed-origins:http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://localhost:3000,http://localhost:8100,http://localhost:4200,http://localhost:8080}") String origins) {
+            @Value("${unibus.cors.allowed-origins:http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://localhost:3000,http://localhost:8100,http://localhost:4200,http://localhost:8080,https://unibus-frontend-five.vercel.app,https://s-frontend-five.vercel.app}") String origins,
+            @Value("${unibus.cors.allowed-origin-patterns:https://unibus-frontend-*-nicbely.vercel.app}") String originPatterns) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.allowedOrigins = Arrays.stream(origins.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isEmpty())
+                .collect(Collectors.toList());
+        this.allowedOriginPatterns = Arrays.stream(originPatterns.split(","))
                 .map(String::trim)
                 .filter(origin -> !origin.isEmpty())
                 .collect(Collectors.toList());
@@ -72,6 +78,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedOriginPatterns(allowedOriginPatterns);
 
         configuration.setAllowedMethods(List.of(
             "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"

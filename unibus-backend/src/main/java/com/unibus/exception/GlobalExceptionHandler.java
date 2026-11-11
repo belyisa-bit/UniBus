@@ -3,6 +3,7 @@ package com.unibus.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -27,5 +28,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(erros);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Map<String, String>> tratarStatus(
+            ResponseStatusException exception) {
+        String mensagem = exception.getReason() == null
+                ? "Não foi possível processar a solicitação."
+                : exception.getReason();
+
+        return ResponseEntity
+                .status(exception.getStatusCode())
+                .body(Map.of("mensagem", mensagem));
     }
 }

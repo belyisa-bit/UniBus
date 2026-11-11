@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import logoUniBus from "../assets/logo-unibus.png"
+import { authService } from "../services/authService"
 import "../styles/Login.css"
 
 function Login() {
@@ -19,29 +20,24 @@ function Login() {
     setCarregando(true)
 
     try {
-      const resposta = await fetch(
-        "https://unibus-backend-55sx.onrender.com/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            senha,
-          }),
-        }
-      )
-
-      if (!resposta.ok) {
-        setErro("E-mail ou senha inválidos.")
-        return
-      }
-
+      const { data } = await authService.login({ email, senha })
+      localStorage.setItem("unibus-token", data.token)
+      localStorage.setItem("unibus-user", JSON.stringify({
+        id: data.id,
+        nome: data.nome,
+        email: data.email,
+      }))
       setSucesso(true)
-
-    } catch {
-      setErro("Não foi possível conectar ao servidor.")
+    } catch (error) {
+      const mensagem = error.response?.data?.mensagem
+        || error.response?.data?.message
+      if (error.response?.status === 401) {
+        setErro(mensagem || "E-mail ou senha inválidos.")
+      } else if (error.response) {
+        setErro(mensagem || "Não foi possível entrar. Verifique seus dados e tente novamente.")
+      } else {
+        setErro("Não foi possível conectar ao servidor. Tente novamente em instantes.")
+      }
     } finally {
       setCarregando(false)
     }

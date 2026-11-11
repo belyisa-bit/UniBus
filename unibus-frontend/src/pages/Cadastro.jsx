@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import logoUniBus from "../assets/logo-unibus.png"
+import { authService } from "../services/authService"
 import "../styles/Cadastro.css"
 
 function Cadastro() {
@@ -27,41 +28,23 @@ function Cadastro() {
     setCarregando(true)
 
     try {
-      const resposta = await fetch(
-        "https://unibus-backend-55sx.onrender.com/api/usuarios",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nome,
-            email,
-            senha,
-          }),
-        }
-      )
-
-      if (!resposta.ok) {
-        if (resposta.status === 400) {
-          const dados = await resposta.json().catch(() => null)
-
-          if (dados?.mensagem) {
-            setErro(dados.mensagem)
-          } else {
-            setErro("Não foi possível criar o cadastro.")
-          }
-        } else {
-          setErro("Não foi possível criar o cadastro.")
-        }
-
-        return
-      }
-
+      await authService.cadastrar({ nome, email, senha })
       setSucesso(true)
+    } catch (error) {
+      const dados = error.response?.data
+      const mensagem = dados?.mensagem
+        || dados?.message
+        || Object.values(dados || {}).find((valor) => typeof valor === "string")
 
-    } catch {
-      setErro("Não foi possível conectar ao servidor.")
+      if (error.response?.status === 409) {
+        setErro(mensagem || "Este e-mail já está cadastrado.")
+      } else if (error.response?.status === 400) {
+        setErro(mensagem || "Confira seus dados. A senha deve ter ao menos 8 caracteres.")
+      } else if (error.response) {
+        setErro(mensagem || "Não foi possível criar o cadastro. Tente novamente.")
+      } else {
+        setErro("Não foi possível conectar ao servidor. Tente novamente em instantes.")
+      }
     } finally {
       setCarregando(false)
     }
@@ -155,6 +138,7 @@ function Cadastro() {
               id="senha"
               type="password"
               placeholder="Digite sua senha"
+              minLength={8}
               value={senha}
               onChange={(event) => setSenha(event.target.value)}
               required
