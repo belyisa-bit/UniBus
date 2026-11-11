@@ -1,8 +1,11 @@
+
 package com.unibus.service;
 
 import com.unibus.model.Onibus;
 import com.unibus.repository.OnibusRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -21,7 +24,8 @@ public class OnibusService {
 
     public Onibus buscarPorId(Long id) {
         return onibusRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ônibus não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Ônibus não encontrado"));
     }
 
     public Onibus criar(Onibus onibus) {
@@ -30,7 +34,8 @@ public class OnibusService {
 
     public void deletar(Long id) {
         if (!onibusRepository.existsById(id)) {
-            throw new RuntimeException("Ônibus não encontrado");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Ônibus não encontrado");
         }
 
         onibusRepository.deleteById(id);
