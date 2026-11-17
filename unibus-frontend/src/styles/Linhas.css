@@ -313,6 +313,24 @@
   flex-wrap: wrap;
 }
 
+.linhas-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 16px;
+  color: #53687f;
+  font-size: 14px;
+}
+
+.linhas-feedback-aviso {
+  padding: 12px 16px;
+  border: 1px solid #f0d7a2;
+  border-radius: 12px;
+  background: #fff9eb;
+  color: #765314;
+}
+
 .linhas-filtros select {
   appearance: none;
   -webkit-appearance: none;

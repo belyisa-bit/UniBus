@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Cadastro from './pages/Cadastro'
 import Entrada from './pages/Entrada'
 import Header from './components/Header/Header'
+import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
 
 function MainLayout() {
@@ -28,6 +29,7 @@ function App() {
 
       <Route path="/cadastro" element={<Cadastro />} />
 
+      <Route element={<ProtectedRoute />}>
       <Route element={<MainLayout />}>
         <Route path="/home" element={<Home />} />
         <Route path="/linhas" element={<Linhas />} />
@@ -35,6 +37,7 @@ function App() {
         <Route path="/rotas" element={<Linhas />} />
         <Route path="/faculdades" element={<Faculdades />} />
         <Route path="/avisos" element={<Avisos />} />
+      </Route>
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

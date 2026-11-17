@@ -1,9 +1,11 @@
 import { Link, useSearchParams } from "react-router-dom"
+import { useCallback, useEffect, useState } from "react"
 import Card from "../components/Card/Card"
 import Button from "../components/Button/Button"
 import Badge from "../components/Badge/Badge"
 import FavoritosLinhas from "../components/FavoritosLinhas/FavoritosLinhas"
 import { linhas } from "../data/linhas"
+import { unibusService } from "../services/unibusService"
 import {
   abreviarOrigem,
   buscarLinhas,
@@ -14,21 +16,60 @@ import {
 import "../styles/Linhas.css"
 
 const LINHAS_POR_PAGINA = 10
-const linhasOrdenadas = ordenarLinhasPorOrigem(linhas)
-
 function Linhas() {
   const [searchParams, setSearchParams] = useSearchParams()
+  const [linhasApi, setLinhasApi] = useState(null)
+  const [estado, setEstado] = useState("carregando")
+
+  const carregarLinhas = useCallback(async () => {
+    try {
+      const { data } = await unibusService.getLinhas()
+      if (!Array.isArray(data) || data.length === 0) throw new Error("A API não retornou linhas")
+      const normalizadas = data.map((item) => {
+        const partes = (item.nome || "").split(" → ")
+        const faculdades = item.campus?.length ? item.campus : partes.slice(1)
+        const origem = item.zona || partes[0] || item.nome || "Linha"
+        return {
+          id: item.id,
+          nome: item.codigo ? `${item.codigo} · ${item.nome}` : item.nome || `Linha ${item.id}`,
+          origem,
+          faculdades,
+          faculdade: faculdades[0],
+          horarioSaida: item.horarioSaida || "—",
+          horarioRetorno: item.horarioRetorno || "—",
+          status: item.ativa === false ? "Fora de operação" : "Em operação",
+        }
+      })
+      setLinhasApi(normalizadas)
+      setEstado("sucesso")
+    } catch {
+      setLinhasApi(null)
+      setEstado("contingencia")
+    }
+  }, [])
+
+  useEffect(() => {
+    Promise.resolve().then(carregarLinhas)
+  }, [carregarLinhas])
+
+  function tentarNovamente() {
+    setEstado("carregando")
+    carregarLinhas()
+  }
+
+  const linhasAtuais = linhasApi || linhas
+  const linhasOrdenadas = ordenarLinhasPorOrigem(linhasAtuais)
 
   const busca = searchParams.get("busca") ?? ""
   const zonaSelecionada = searchParams.get("zona") ?? ""
   const campusSelecionado = searchParams.get("campus") ?? ""
 
-  const zonas = [...new Set(linhas.map((linha) => linha.origem))].sort((a, b) =>
+  const zonas = [...new Set(linhasAtuais.map((linha) => linha.origem))].sort((a, b) =>
     a.localeCompare(b, "pt-BR")
   )
 
   const campi = [
-    ...new Set(linhas.flatMap((linha) => obterFaculdades(linha))),
+    ...new Set(linhasAtuais.flatMap((linha) => obterFaculdades(linha))),
   ].sort((a, b) => a.localeCompare(b, "pt-BR"))
 
   let resultados = buscarLinhas(linhasOrdenadas, busca)
@@ -106,6 +147,14 @@ function Linhas() {
 
   return (
     <main className="linhas-page">
+      {estado === "carregando" && <p className="linhas-feedback" role="status">Carregando linhas…</p>}
+      {estado === "contingencia" && (
+        <div className="linhas-feedback linhas-feedback-aviso" role="status">
+          <span>Não foi possível carregar a API. Exibindo dados locais.</span>
+          <Button onClick={tentarNovamente}>Tentar novamente</Button>
+        </div>
+      )}
+      {estado === "sucesso" && <p className="linhas-feedback" role="status">Linhas atualizadas pela API.</p>}
       <section className="linhas-heading">
         <p className="linhas-eyebrow">TRANSPORTE UNIVERSITÁRIO</p>
         <h1>Linhas de ônibus</h1>
@@ -193,7 +242,7 @@ function Linhas() {
             }`}
       </p>
 
-      {resultados.length === 0 ? (
+      {estado === "carregando" ? null : resultados.length === 0 ? (
         <div className="linhas-empty">
           <h2>Nenhuma linha encontrada</h2>
           <p>Tente outra cidade ou nome de faculdade.</p>

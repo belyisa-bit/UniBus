@@ -1,11 +1,12 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import logoUniBus from "../assets/logo-unibus.png"
 import { authService } from "../services/authService"
 import "../styles/Login.css"
 
 function Login() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
@@ -27,13 +28,13 @@ function Login() {
         nome: data.nome,
         email: data.email,
       }))
+      window.dispatchEvent(new Event("unibus-auth-change"))
       setSucesso(true)
     } catch (error) {
-      const mensagem = error.response?.data?.mensagem
-        || error.response?.data?.message
-      if (error.response?.status === 401) {
+      const mensagem = error.data?.mensagem || error.data?.message
+      if (error.status === 401) {
         setErro(mensagem || "E-mail ou senha inválidos.")
-      } else if (error.response) {
+      } else if (error.status) {
         setErro(mensagem || "Não foi possível entrar. Verifique seus dados e tente novamente.")
       } else {
         setErro("Não foi possível conectar ao servidor. Tente novamente em instantes.")
@@ -71,7 +72,7 @@ function Login() {
           <button
             type="button"
             className="login-button"
-            onClick={() => navigate("/home")}
+            onClick={() => navigate(location.state?.from?.pathname || "/home", { replace: true })}
           >
             Ir para o UniBus
           </button>

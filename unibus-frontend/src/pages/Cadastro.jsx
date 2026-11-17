@@ -31,16 +31,16 @@ function Cadastro() {
       await authService.cadastrar({ nome, email, senha })
       setSucesso(true)
     } catch (error) {
-      const dados = error.response?.data
+      const dados = error.data
       const mensagem = dados?.mensagem
         || dados?.message
         || Object.values(dados || {}).find((valor) => typeof valor === "string")
 
-      if (error.response?.status === 409) {
+      if (error.status === 409) {
         setErro(mensagem || "Este e-mail já está cadastrado.")
-      } else if (error.response?.status === 400) {
+      } else if (error.status === 400) {
         setErro(mensagem || "Confira seus dados. A senha deve ter ao menos 8 caracteres.")
-      } else if (error.response) {
+      } else if (error.status) {
         setErro(mensagem || "Não foi possível criar o cadastro. Tente novamente.")
       } else {
         setErro("Não foi possível conectar ao servidor. Tente novamente em instantes.")
