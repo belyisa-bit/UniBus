@@ -1,7 +1,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/DEMO-ONLINE-22c55e?style=for-the-badge" />
   <img src="https://img.shields.io/badge/BACKEND-SPRING%20BOOT-6DB33F?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/DATABASE-H2%20(DEV)-4169E1?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/AUTH-JWT-000000?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/DATABASE-H2%20(DEV)%20%7C%20POSTGRESQL-4169E1?style=for-the-badge" />
   <img src="https://img.shields.io/badge/FRONTEND-REACT%20%2B%20VITE-61DAFB?style=for-the-badge" />
 </p>
 
@@ -9,7 +10,7 @@
 <h3 align="center">Qual linha te leva pro campus hoje?</h3>
 
 <p align="center">
-  Plataforma de consulta de transporte universitário, com informações sobre linhas, horários, paradas e localização de ônibus.<br/>
+  Plataforma de consulta de transporte universitário: linhas, horários, paradas, avisos, caronas e localização de ônibus em mapa.<br/>
   Projeto acadêmico evolutivo desenvolvido para as entregas AV1 e AV2.
 </p>
 
@@ -22,17 +23,18 @@
 ## Sumário
 
 - [Sobre o projeto](#sobre-o-projeto)
-- [Objetivos](#objetivos)
 - [Funcionalidades](#funcionalidades)
-- [Arquitetura e fluxo](#arquitetura-e-fluxo)
+- [Arquitetura](#arquitetura)
 - [Stack tecnológica](#stack-tecnológica)
 - [Estrutura do repositório](#estrutura-do-repositório)
+- [Autenticação e segurança](#autenticação-e-segurança)
 - [Rotas do frontend](#rotas-do-frontend)
 - [Endpoints do backend](#endpoints-do-backend)
 - [Localização e simulador GPS](#localização-e-simulador-gps)
 - [Dados e persistência](#dados-e-persistência)
 - [Como executar localmente](#como-executar-localmente)
-- [Como testar a API](#como-testar-a-api)
+- [Variáveis de ambiente](#variáveis-de-ambiente)
+- [Testes](#testes)
 - [Deploy](#deploy)
 - [Limitações e próximos passos](#limitações-e-próximos-passos)
 - [Equipe](#equipe)
@@ -42,374 +44,280 @@
 
 ## Sobre o projeto
 
-O **UniBus — Transporte Universitário Inteligente** é uma aplicação voltada a estudantes que utilizam transporte universitário. A proposta é reunir informações que ajudem o estudante a consultar linhas, horários e paradas, além de permitir a evolução do sistema para acompanhar a localização dos ônibus.
+O **UniBus** ajuda estudantes a descobrir qual linha de ônibus os leva ao campus, em quais horários, por quais paradas e onde o veículo está agora.
 
-O projeto está sendo desenvolvido de forma incremental: a primeira etapa utiliza dados locais no frontend; a evolução inclui uma API própria em Spring Boot, persistência em banco de dados e recursos de localização simulada para demonstração acadêmica.
+O sistema é dividido em duas aplicações independentes:
 
-A aplicação pode ser acessada pela versão publicada do frontend. O backend é executado separadamente e, no estado atual do projeto, o frontend ainda utiliza dados locais para as funcionalidades de linhas.
+- **Frontend** em React + Vite, publicado na Vercel.
+- **Backend** em Spring Boot com API REST e autenticação JWT, publicado na Render.
 
-## Objetivos
-
-- Centralizar informações úteis sobre o transporte universitário.
-- Permitir a consulta de linhas, horários e paradas.
-- Oferecer recursos como busca, filtros e favoritos.
-- Desenvolver uma API REST própria para gerenciar os dados do sistema.
-- Representar ônibus e registrar suas localizações geográficas.
-- Demonstrar o funcionamento de localização por meio de um simulador GPS, sem depender de uma integração municipal real.
+Na versão atual, o frontend já está **integrado ao backend**: o login gera um token JWT, as rotas internas são protegidas e a lista de linhas é consumida da API.
 
 ---
 
 ## Funcionalidades
 
-| Funcionalidade | Situação no projeto |
-|---|---|
-| Página inicial do UniBus | Implementada no frontend |
-| Listagem e detalhes de linhas | Implementadas no frontend com dados locais |
-| Busca, filtro e ordenação de linhas | Disponíveis nos serviços do frontend |
-| Favoritos com persistência no navegador | Implementados com `localStorage` |
-| API REST de linhas, paradas e horários | Implementada no backend |
-| API de avisos e favoritos | Implementada no backend |
-| API de ônibus | Implementada no backend |
-| API de localizações | Implementada no backend |
-| API de alertas de carona | Implementada no backend |
-| Simulador de GPS | Implementado no backend; gera posições simuladas periodicamente |
-| Integração do frontend com a API | Ainda não concluída |
-| Localização real fornecida pelas prefeituras | Depende de disponibilização de dados/API oficial |
-
-> A localização gerada pelo simulador é fictícia e serve para desenvolvimento e demonstração. Ela não representa a posição real de um ônibus em operação.
+- **Cadastro e login** de usuários com senha criptografada e sessão via token JWT.
+- **Rotas protegidas** no frontend: apenas usuários autenticados acessam as telas internas.
+- **Consulta de linhas** com detalhes por linha, paradas e horários.
+- **Mapa interativo** (Leaflet) com a rota e a posição dos ônibus.
+- **Simulador de GPS** que movimenta os ônibus automaticamente a cada 10 segundos.
+- **Favoritos**: o usuário marca linhas de interesse (hook `useFavoritos`).
+- **Avisos** sobre as linhas (atrasos, mudanças de itinerário etc.).
+- **Alertas de carona**: cadastro, busca e desativação.
+- **Faculdades**: página com as instituições atendidas.
+- **Carga inicial de dados** de exemplo (`LinhasExemploInitializer`, `data.sql`, `dados.json`).
+- **Tratamento global de erros** na API (`GlobalExceptionHandler`).
 
 ---
 
-## Arquitetura e fluxo
+## Arquitetura
 
-O repositório está organizado em duas aplicações: frontend e backend.
-
-### Frontend
-
-O React apresenta as páginas e utiliza dados locais para exibir as linhas. Os serviços e hooks do frontend apoiam operações como busca, filtros, ordenação e favoritos.
-
-```text
-Dados locais do frontend
-        ↓
-Services e hooks
-        ↓
-Páginas e componentes React
-        ↓
-Interface do UniBus
-        ↓
-Favoritos armazenados no localStorage
+```
+┌────────────────────┐   HTTPS + JWT    ┌──────────────────────────┐
+│ Frontend (React)   │ ───────────────▶ │ Backend (Spring Boot)    │
+│ Vercel             │ ◀─────────────── │ Render                   │
+│ axios + Leaflet    │      JSON        │ Controller → Service →   │
+└────────────────────┘                  │ Repository → JPA         │
+                                        └────────────┬─────────────┘
+                                                     │
+                                        H2 (local) / PostgreSQL (Render)
 ```
 
-### Backend
+**Frontend:** `pages` (telas) → `components` (UI reutilizável) → `services` (chamadas HTTP via axios, com interceptor que anexa o token em `Authorization`) → `hooks` (estado, como favoritos).
 
-A API foi desenvolvida com Spring Boot e organizada em camadas:
-
-```text
-Requisição HTTP
-      ↓
-Controller
-      ↓
-Service
-      ↓
-Repository (Spring Data JPA)
-      ↓
-Banco H2
-```
-
-- **Model:** entidades persistidas no banco.
-- **Controller:** endpoints REST que recebem as requisições.
-- **Service:** operações e regras de negócio.
-- **Repository:** acesso aos dados por meio do Spring Data JPA.
-
-O frontend e o backend podem ser executados separadamente. A interface publicada ainda não consome a API do backend.
+**Backend:** `controller` (REST) → `service` (regras de negócio) → `repository` (Spring Data JPA) → `model` (entidades). Segurança em `config` e `security`.
 
 ---
 
 ## Stack tecnológica
 
 ### Frontend
-
-- React
-- JavaScript
-- Vite
-- React Router
-- CSS
+| Tecnologia | Uso |
+|---|---|
+| React 19 | Interface |
+| Vite | Build e dev server |
+| React Router 7 | Rotas e rotas protegidas |
+| Axios | Cliente HTTP |
+| Leaflet + React-Leaflet | Mapas |
+| ESLint | Qualidade de código |
 
 ### Backend
-
-- Java 17
-- Spring Boot
-- Spring Web
-- Spring Data JPA
-- Bean Validation
-- Lombok
-- Maven
-- Banco H2 em memória
-
-### Ferramentas de desenvolvimento e teste
-
-- Git e GitHub para versionamento
-- Postman para testar endpoints REST
+| Tecnologia | Uso |
+|---|---|
+| Java 17 | Linguagem |
+| Spring Boot (Web, Data JPA, Validation) | API REST |
+| Spring Security + JJWT 0.12 | Autenticação JWT |
+| H2 | Banco em memória (perfil `local`) |
+| PostgreSQL | Banco em produção (perfil `render`) |
+| Maven (wrapper) | Build |
+| Docker | Empacotamento para deploy |
 
 ---
 
 ## Estrutura do repositório
 
-```text
+```
 UniBus/
 ├── docs/
+│   ├── estrutura-dados-persistencia.md
 │   └── relacionamento-entidades.md
+├── unibus-backend/
+│   ├── Dockerfile
+│   └── src/main/java/com/unibus/
+│       ├── config/        # Security, CORS (WebConfig), PasswordEncoder
+│       ├── controller/    # Auth, Usuario, Linha, Parada, Horario, Onibus,
+│       │                  # Localizacao, Aviso, Favorito, AlertaCarona
+│       ├── dto/           # LoginRequest, CadastroRequest, AuthResponse, UsuarioResponse
+│       ├── exception/     # GlobalExceptionHandler
+│       ├── model/         # Entidades JPA
+│       ├── repository/    # Repositórios Spring Data
+│       ├── security/      # JwtService, JwtAuthenticationFilter
+│       └── service/       # Regras de negócio, SimuladorGpsService, inicializador de dados
 ├── unibus-frontend/
-│   ├── public/
 │   └── src/
-│       ├── assets/
-│       ├── components/
-│       ├── data/
-│       ├── hooks/
-│       ├── pages/
-│       ├── services/
-│       ├── styles/
-│       ├── utils/
-│       ├── App.jsx
-│       └── main.jsx
-└── unibus-backend/
-    ├── src/
-    │   ├── main/
-    │   │   ├── java/com/unibus/
-    │   │   │   ├── config/
-    │   │   │   ├── controller/
-    │   │   │   ├── model/
-    │   │   │   ├── repository/
-    │   │   │   ├── service/
-    │   │   │   └── UnibusBackendApplication.java
-    │   │   └── resources/
-    │   │       ├── application.properties
-    │   │       ├── dados.json
-    │   │       └── data.sql
-    │   └── test/
-    ├── mvnw
-    ├── mvnw.cmd
-    └── pom.xml
+│       ├── components/    # Badge, Button, Card, Input, Header, Footer,
+│       │                  # FavoritosLinhas, MapaLinhaDemo, ProtectedRoute
+│       ├── data/          # Dados locais e rotas GPS de demonstração
+│       ├── hooks/         # useFavoritos
+│       ├── pages/         # Entrada, Login, Cadastro, Home, Linhas,
+│       │                  # DetalhesLinha, Faculdades, Avisos
+│       └── services/      # api, authService, linhaService, avisoService, unibusService
+└── README.md
 ```
 
-### Principais entidades do backend
+### Principais entidades
 
-- `Linha`: representa uma linha de transporte.
-- `Parada`: representa um ponto fixo do trajeto, incluindo coordenadas.
-- `Horario`: representa horários associados a linhas e paradas.
-- `Onibus`: representa um veículo e pode estar associado a uma linha.
-- `Localizacao`: registra latitude, longitude, data/hora e o ônibus relacionado.
-- `Aviso`: representa avisos relacionados ao transporte.
-- `Favorito`: representa uma linha favoritada.
-- `AlertaCarona`: representa um alerta de carona.
+`Usuario`, `Linha`, `Parada`, `Horario`, `Onibus`, `Localizacao`, `Aviso`, `Favorito` e `AlertaCarona`. Detalhes em [`docs/relacionamento-entidades.md`](docs/relacionamento-entidades.md).
+
+---
+
+## Autenticação e segurança
+
+1. O usuário se cadastra em `POST /api/auth/cadastro` e entra em `POST /api/auth/login`.
+2. O backend devolve um **token JWT** (validade padrão de 24h).
+3. O frontend guarda o token no `localStorage` (`unibus-token`) e o anexa automaticamente em toda requisição.
+4. O `JwtAuthenticationFilter` valida o token em cada chamada.
+5. No frontend, o componente `ProtectedRoute` redireciona usuários não autenticados.
+
+**Regras de acesso na API:**
+
+| Acesso | Endpoints |
+|---|---|
+| Público | `/api/auth/**` e todas as requisições `GET` de linhas, paradas, horários, localizações, ônibus, avisos e alertas de carona |
+| Autenticado | Qualquer outra requisição (criar, remover, favoritos, usuários etc.) |
+
+Senhas são armazenadas com hash (`PasswordEncoder`) e o CORS é configurável por variável de ambiente.
 
 ---
 
 ## Rotas do frontend
 
-| Rota | Página | Descrição |
+| Rota | Acesso | Descrição |
 |---|---|---|
-| `/` | Home | Apresenta a proposta do UniBus |
-| `/linhas` | Linhas | Exibe a listagem de linhas |
-| `/linhas/:id` | Detalhes da Linha | Exibe os detalhes de uma linha |
-
-A navegação utiliza `react-router-dom`.
+| `/` | Pública | Tela de entrada |
+| `/login` | Pública | Login |
+| `/cadastro` | Pública | Cadastro |
+| `/home` | Protegida | Painel inicial |
+| `/linhas` e `/rotas` | Protegida | Lista de linhas |
+| `/linhas/:id` | Protegida | Detalhes, paradas, horários e mapa |
+| `/faculdades` | Protegida | Faculdades atendidas |
+| `/avisos` | Protegida | Avisos |
 
 ---
 
 ## Endpoints do backend
 
-A API local utiliza o endereço-base `http://localhost:8081`.
+URL base local: `http://localhost:8081`
 
-| Recurso | Método | Endpoint | Descrição |
-|---|---|---|---|
-| Linhas | GET | `/api/linhas` | Lista linhas |
-| Linhas | GET | `/api/linhas/{id}` | Busca uma linha por ID |
-| Linhas | POST | `/api/linhas` | Cadastra uma linha |
-| Linhas | DELETE | `/api/linhas/{id}` | Remove uma linha |
-| Paradas | GET | `/api/paradas` | Lista paradas ativas |
-| Paradas | GET | `/api/paradas/linha/{linhaId}` | Lista paradas de uma linha |
-| Paradas | POST | `/api/paradas` | Cadastra uma parada |
-| Paradas | DELETE | `/api/paradas/{id}` | Remove uma parada |
-| Horários | GET | `/api/horarios/linha/{linhaId}` | Lista horários de uma linha |
-| Horários | GET | `/api/horarios/parada/{paradaId}` | Lista horários de uma parada |
-| Horários | POST | `/api/horarios` | Cadastra um horário |
-| Horários | DELETE | `/api/horarios/{id}` | Remove um horário |
-| Avisos | GET | `/api/avisos` | Lista avisos ativos |
-| Avisos | GET | `/api/avisos/linha/{linhaId}` | Lista avisos de uma linha |
-| Avisos | POST | `/api/avisos` | Cadastra um aviso |
-| Favoritos | GET | `/api/favoritos` | Lista favoritos |
-| Favoritos | GET | `/api/favoritos/linha/{linhaId}` | Busca favorito por linha |
-| Favoritos | POST | `/api/favoritos` | Cadastra um favorito |
-| Favoritos | DELETE | `/api/favoritos/{id}` | Remove um favorito |
-| Ônibus | GET | `/api/onibus` | Lista ônibus |
-| Ônibus | GET | `/api/onibus/{id}` | Busca um ônibus por ID |
-| Ônibus | POST | `/api/onibus` | Cadastra um ônibus |
-| Ônibus | DELETE | `/api/onibus/{id}` | Remove um ônibus |
-| Localizações | GET | `/api/localizacoes` | Lista localizações registradas |
-| Localizações | GET | `/api/localizacoes/{id}` | Busca uma localização por ID |
-| Localizações | POST | `/api/localizacoes` | Registra uma localização |
-| Localizações | DELETE | `/api/localizacoes/{id}` | Remove uma localização |
-| Alertas de carona | GET | `/api/alertas-carona` | Lista alertas ativos |
-| Alertas de carona | GET | `/api/alertas-carona/{id}` | Busca um alerta por ID |
-| Alertas de carona | GET | `/api/alertas-carona/buscar?origem={origem}&destino={destino}` | Pesquisa alertas por trajeto |
-| Alertas de carona | POST | `/api/alertas-carona` | Cadastra um alerta |
-| Alertas de carona | PATCH | `/api/alertas-carona/{id}/desativar` | Desativa um alerta |
+| Recurso | Método e rota |
+|---|---|
+| **Auth** | `POST /api/auth/cadastro` · `POST /api/auth/login` |
+| **Usuários** | `POST /api/usuarios` |
+| **Linhas** | `GET /api/linhas` · `GET /api/linhas/{id}` · `GET /api/linhas/{id}/localizacao` · `POST /api/linhas` · `DELETE /api/linhas/{id}` |
+| **Paradas** | `GET /api/paradas` · `GET /api/paradas/linha/{linhaId}` · `POST` · `DELETE /{id}` |
+| **Horários** | `GET /api/horarios/linha/{linhaId}` · `GET /api/horarios/parada/{paradaId}` · `POST` · `DELETE /{id}` |
+| **Ônibus** | `GET /api/onibus` · `GET /api/onibus/{id}` · `POST` · `DELETE /{id}` |
+| **Localizações** | `GET /api/localizacoes` · `GET /api/localizacoes/{id}` · `POST` · `DELETE /{id}` |
+| **Avisos** | `GET /api/avisos` · `GET /api/avisos/linha/{linhaId}` · `POST` |
+| **Favoritos** | `GET /api/favoritos` · `GET /api/favoritos/linha/{linhaId}` · `POST` · `DELETE /{id}` |
+| **Alertas de carona** | `GET /api/alertas-carona` · `GET /{id}` · `GET /buscar` · `POST` · `PATCH /{id}/desativar` |
 
-Os endpoints de cadastro recebem JSON no corpo da requisição. Para operações que exigem uma entidade relacionada, informe um ID existente no banco.
+> Rotas `GET` listadas em "Autenticação e segurança" são públicas; as demais exigem o header `Authorization: Bearer <token>`.
 
 ---
 
 ## Localização e simulador GPS
 
-A localização foi modelada separadamente da entidade `Onibus`. Dessa forma, um ônibus pode possuir vários registros de localização ao longo do tempo.
+O `SimuladorGpsService` usa `@Scheduled(fixedRate = 10000)` para aplicar uma pequena variação de latitude/longitude nos ônibus a cada **10 segundos**, simulando movimento real. O frontend exibe essas posições no mapa (Leaflet), e `GET /api/linhas/{id}/localizacao` retorna a posição atual dos ônibus da linha.
 
-Cada registro de `Localizacao` contém:
-
-- `latitude`: coordenada geográfica, validada entre `-90` e `90`;
-- `longitude`: coordenada geográfica, validada entre `-180` e `180`;
-- `dataHora`: data e hora do registro;
-- `onibus`: ônibus associado à localização.
-
-### Simulador
-
-O backend possui um `SimuladorGpsService`, habilitado pelo agendamento do Spring. O serviço gera coordenadas fictícias periodicamente (a cada 10 segundos) e salva os registros no banco H2.
-
-O simulador utiliza uma posição-base definida no código e aplica pequenas variações aleatórias às coordenadas. Caso ainda não exista, cria um ônibus identificado como `ONIBUS_SIMULADO`.
-
-> **Importante:** esse mecanismo é uma simulação para fins acadêmicos. Não utiliza GPS de um veículo real nem dados de uma API municipal.
+Há também rotas de demonstração no frontend (`data/rotasGpsDemo.js`) usadas pelo componente `MapaLinhaDemo`.
 
 ---
 
 ## Dados e persistência
 
-- **Frontend:** as informações das linhas utilizadas pela interface estão em `unibus-frontend/src/data/linhas.js`.
-- **Favoritos no frontend:** são armazenados no `localStorage` do navegador.
-- **Backend:** utiliza H2 em memória, configurado em `unibus-backend/src/main/resources/application.properties`.
-- **Porta do backend:** `8081`.
-- **Console H2:** disponível localmente em `http://localhost:8081/h2-console`, enquanto o backend estiver em execução.
-- **Persistência do H2:** por ser um banco em memória (`jdbc:h2:mem:unibusdb`), os dados são temporários e podem ser perdidos ao reiniciar a aplicação.
+- **Local:** H2 em memória, com console em `/h2-console`. Os dados são recriados a cada execução e populados por `data.sql` e `LinhasExemploInitializer`.
+- **Produção (Render):** PostgreSQL, configurado pelo perfil `render`.
+- **Favoritos e avisos** também usam `localStorage` no frontend como apoio.
+
+Veja [`docs/estrutura-dados-persistencia.md`](docs/estrutura-dados-persistencia.md).
 
 ---
 
 ## Como executar localmente
 
 ### Pré-requisitos
+- Node.js 18+ e npm
+- Java 17+ (o Maven wrapper já está incluso)
 
-- Java 17
-- Node.js e npm
-- Git
-
-### 1. Clonar o repositório
-
+### 1. Clonar
 ```bash
 git clone https://github.com/belyisa-bit/UniBus.git
 cd UniBus
 ```
 
-### 2. Executar o frontend
+### 2. Backend
+```bash
+cd unibus-backend
+./mvnw spring-boot:run        # Windows: mvnw.cmd spring-boot:run
+```
+Sobe em `http://localhost:8081` com o perfil `local` (H2).
 
-Em um terminal:
-
+### 3. Frontend
 ```bash
 cd unibus-frontend
+cp .env.example .env          # ajuste VITE_API_URL se necessário
 npm install
 npm run dev
 ```
-
-O Vite exibirá o endereço local, normalmente:
-
-```text
-http://localhost:5173
-```
-
-### 3. Executar o backend
-
-Em outro terminal, na raiz do repositório:
-
-```bash
-cd unibus-backend
-```
-
-No Windows:
-
-```powershell
-.\mvnw.cmd spring-boot:run
-```
-
-No Linux/macOS:
-
-```bash
-./mvnw spring-boot:run
-```
-
-A API estará disponível em:
-
-```text
-http://localhost:8081
-```
-
-O frontend pode ser executado sem iniciar o backend, pois ainda utiliza dados locais para as páginas de linhas.
+Abre em `http://localhost:5173`.
 
 ---
 
-## Como testar a API
+## Variáveis de ambiente
 
-Com o backend em execução, utilize o Postman ou outra ferramenta HTTP.
+### Backend
+| Variável | Descrição | Padrão |
+|---|---|---|
+| `PORT` | Porta do servidor | `8081` |
+| `SPRING_PROFILES_ACTIVE` | `local` ou `render` | `local` |
+| `UNIBUS_JWT_SECRET` | Segredo do JWT (**defina em produção**) | valor de desenvolvimento |
+| `JWT_EXPIRATION_MS` | Validade do token | `86400000` |
+| `UNIBUS_CORS_ALLOWED_ORIGINS` | Origens permitidas no CORS | localhost e Vercel |
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Conexão PostgreSQL (perfil `render`) | — |
 
-### Exemplo: listar ônibus
+### Frontend
+| Variável | Descrição |
+|---|---|
+| `VITE_API_URL` | URL base do backend, sem `/api` (ex.: `http://localhost:8081`) |
 
-```http
-GET http://localhost:8081/api/onibus
+---
+
+## Testes
+
+```bash
+# Backend
+cd unibus-backend && ./mvnw test
+
+# Frontend (lint)
+cd unibus-frontend && npm run lint
 ```
 
-### Exemplo: registrar localização
+Testes existentes: `SimuladorGpsServiceTest`, `AlertaCaronaServiceTest`, `AvisoServiceTest`, `UnibusBackendApplicationTests` e `linhaService.test.js`.
 
-```http
-POST http://localhost:8081/api/localizacoes
-Content-Type: application/json
+### Exemplo rápido de API
+```bash
+# Login
+curl -X POST http://localhost:8081/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"seu@email.com","senha":"suaSenha"}'
+
+# Rota protegida com token
+curl http://localhost:8081/api/favoritos -H "Authorization: Bearer <token>"
 ```
-
-```json
-{
-  "latitude": -8.0553,
-  "longitude": -34.9514,
-  "dataHora": "2026-09-30T10:00:00",
-  "onibus": {
-    "id": 1
-  }
-}
-```
-
-O `onibus.id` deve corresponder a um ônibus existente no banco. A latitude e a longitude precisam estar dentro dos intervalos válidos.
-
-### Testes sugeridos
-
-1. Consultar a lista de ônibus e localizações.
-2. Cadastrar um ônibus e consultar o registro criado.
-3. Registrar uma localização associada a um ônibus existente.
-4. Buscar um registro por ID.
-5. Enviar coordenadas fora dos limites para verificar a validação.
-6. Consultar novamente as localizações após o simulador gerar novos registros.
 
 ---
 
 ## Deploy
 
-| Camada | Endereço | Situação |
+| Camada | Endereço | Plataforma |
 |---|---|---|
-| Frontend | [unibus-frontend-five.vercel.app](https://unibus-frontend-five.vercel.app/) | Publicado na Vercel |
-| Backend | https://unibus-backend-55sx.onrender.com/ |Publicado na Render |
+| Frontend | [unibus-frontend-five.vercel.app](https://unibus-frontend-five.vercel.app/) | Vercel |
+| Backend | [unibus-backend-55sx.onrender.com](https://unibus-backend-55sx.onrender.com/) | Render (Docker + PostgreSQL) |
+
+> No plano gratuito da Render, a primeira requisição após inatividade pode demorar alguns segundos.
 
 ---
 
 ## Limitações e próximos passos
 
-- O simulador GPS gera coordenadas fictícias e não representa a localização real dos ônibus.
-- A API municipal de localização depende da disponibilidade de dados oficiais dos municípios.
-- O banco H2 está configurado em memória para desenvolvimento; os dados não são persistidos após reinicializações.
-- A integração entre frontend, API e visualização de localização no mapa é uma evolução prevista.
-- Autenticação e rotas protegidas não estão descritas como funcionalidades implementadas no estado atual do código analisado.
+- A localização dos ônibus é **simulada**; integrar GPS real ou API de transporte.
+- Migrar o restante das telas (avisos, favoritos) para a API, reduzindo o uso de dados locais.
+- Controle de permissões por perfil (ex.: administrador para criar linhas e avisos).
+- Ampliar a cobertura de testes (frontend e integração).
+- Substituir `ddl-auto=update` por migrations (Flyway/Liquibase).
+- Notificações em tempo real (WebSocket) para avisos e chegada de ônibus.
 
 ---
 
@@ -417,22 +325,21 @@ O `onibus.id` deve corresponder a um ônibus existente no banco. A latitude e a 
 
 | Integrante | Matrícula | Principais contribuições |
 |---|---|---|
-| Isabelle Victória | 01808806 | Estruturação do projeto, modelagem e desenvolvimento do backend | 
-| Gabrielly Carneiro | 01797929 | Componentes de layout e configuração de rotas | 
-| Geovanna Almeida | 01815451 | Criação de paginas no frontend | 
-| Josinaldo Xavier | 01823400  | Apoio geral no desenvolvimento |
+| Isabelle Victória | 01808806 | Estruturação do projeto, modelagem e desenvolvimento do backend |
+| Gabrielly Carneiro | 01797929 | Componentes de layout e configuração de rotas |
+| Geovanna Almeida | 01815451 | Criação de páginas no frontend |
+| Josinaldo Xavier | 01823400 | Apoio geral no desenvolvimento |
 | Gabriela Sabino | 01660021 | Hooks e services de dados do frontend e backend |
 
-
+---
 
 ## Uso de inteligência artificial
 
-Durante o desenvolvimento, ferramentas de inteligência artificial foram utilizadas como apoio ao planejamento, à modelagem, à revisão de código, à organização de tarefas e à elaboração de documentação.
+Ferramentas de IA foram usadas como apoio ao planejamento, modelagem, revisão de código, organização de tarefas e documentação.
 
-- **ChatGPT** — apoio no planejamento, divisão de tarefas e revisão de lógica.
-- **Google Gemini Pro** — apoio na modelagem de dados e revisão de trechos de código.
-- **Claude (Anthropic)** — apoio na organização do backlog, criação de dados fictícios, exemplos de endpoints e documentação.
-
+- **ChatGPT** — planejamento, divisão de tarefas e revisão de lógica.
+- **Google Gemini Pro** — modelagem de dados e revisão de trechos de código.
+- **Claude (Anthropic)** — organização do backlog, dados fictícios, exemplos de endpoints e documentação.
 
 ---
 
