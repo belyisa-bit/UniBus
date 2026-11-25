@@ -43,3 +43,10 @@ export function resumirHorarios(horarios, dia = new Date().getDay()) {
 export function linkDetalhes(id, fonte = 'api') {
   return `/linhas/${encodeURIComponent(id)}${fonte === 'local' ? '?fonte=local' : ''}`
 }
+
+export function nomesPontosEmbarque(paradas) {
+  // Referência exigida pelo horário demonstrativo, não um ponto físico de embarque.
+  return paradas.filter(parada => parada.ativa !== false
+    && parada.nome !== 'Retorno: confirmar embarque com o motorista')
+    .map(parada => parada.nome)
+}

@@ -120,25 +120,12 @@ function Linhas() {
           <Button onClick={tentarNovamente}>Tentar novamente</Button>
         </div>
       )}
-      {estado === "sucesso" && <p className="linhas-feedback" role="status">Linhas atualizadas pela API.</p>}
       {linhasAtuais.some(linha => linha.demonstrativa) && <p className="linhas-feedback">Dados demonstrativos locais. Horários de segunda a sexta; confirme a operação com o motorista.</p>}
       {estado === "erro" && <div className="linhas-feedback" role="alert">{erro} <Button onClick={tentarNovamente}>Tentar novamente</Button></div>}
       {estado === "local" && <p className="linhas-feedback" role="status">Exibindo rotas demonstrativas locais.</p>}
       {horarios.temErro && <div className="linhas-feedback" role="alert">Não foi possível consultar os horários. {horarios.erro} <Button onClick={horarios.tentarNovamente}>Tentar novamente</Button></div>}
       <section className="linhas-heading">
         <p className="linhas-eyebrow">TRANSPORTE UNIVERSITÁRIO</p>
-        <h1>Linhas de ônibus</h1>
-        <p>Consulte as linhas disponíveis e encontre a opção para o seu trajeto.</p>
-        <label className="linhas-search">
-          <span aria-hidden="true">⌕</span>
-          <input
-            type="search"
-            value={busca}
-            onChange={(event) => atualizarBusca(event.target.value)}
-            placeholder="Busque por código, nome ou empresa"
-            aria-label="Buscar linha por código, nome ou empresa"
-          />
-        </label>
       </section>
 
       <div className="linhas-intro">

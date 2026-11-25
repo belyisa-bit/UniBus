@@ -64,9 +64,9 @@ Na versão atual, o frontend já está **integrado ao backend**: o login gera um
 - **Simulador de GPS** que movimenta os ônibus automaticamente a cada 10 segundos.
 - **Favoritos**: o usuário marca linhas de interesse (hook `useFavoritos`).
 - **Avisos** sobre as linhas (atrasos, mudanças de itinerário etc.).
-- **Alertas de carona**: cadastro, busca e desativação.
+- **Alertas de carona na API**: cadastro, busca e desativação; não há tela de caronas integrada nesta versão.
 - **Faculdades**: página com as instituições atendidas.
-- **Carga inicial de dados** de exemplo (`LinhasExemploInitializer`, `data.sql`, `dados.json`).
+- **Carga inicial demonstrativa local** de linhas, horários e referências de embarque (`DadosLocaisInitializer`).
 - **Tratamento global de erros** na API (`GlobalExceptionHandler`).
 
 ---
@@ -77,14 +77,16 @@ Na versão atual, o frontend já está **integrado ao backend**: o login gera um
 ┌────────────────────┐   HTTPS + JWT    ┌──────────────────────────┐
 │ Frontend (React)   │ ───────────────▶ │ Backend (Spring Boot)    │
 │ Vercel             │ ◀─────────────── │ Render                   │
-│ axios + Leaflet    │      JSON        │ Controller → Service →   │
+│ fetch + Leaflet    │      JSON        │ Controller → Service →   │
 └────────────────────┘                  │ Repository → JPA         │
                                         └────────────┬─────────────┘
                                                      │
                                         H2 (local) / PostgreSQL (Render)
 ```
 
-**Frontend:** `pages` (telas) → `components` (UI reutilizável) → `services` (chamadas HTTP via axios, com interceptor que anexa o token em `Authorization`) → `hooks` (estado, como favoritos).
+**Frontend:** `pages` e `components` compõem a interface; `hooks` gerenciam estado e cancelamento; `services/api.js` concentra `fetch`, URL-base e o header `Authorization: Bearer`. Não há chamadas HTTP espalhadas nas páginas.
+
+**Opção aprovada pela equipe para a AV2:** integração com backend próprio, desenvolvido pela equipe em Spring Boot. A entrega final parte da `main`. O tema e o repositório da AV1 foram preservados.
 
 **Backend:** `controller` (REST) → `service` (regras de negócio) → `repository` (Spring Data JPA) → `model` (entidades). Segurança em `config` e `security`.
 
@@ -98,7 +100,7 @@ Na versão atual, o frontend já está **integrado ao backend**: o login gera um
 | React 19 | Interface |
 | Vite | Build e dev server |
 | React Router 7 | Rotas e rotas protegidas |
-| Axios | Cliente HTTP |
+| Fetch API | Cliente HTTP centralizado em `services/api.js` |
 | Leaflet + React-Leaflet | Mapas |
 | ESLint | Qualidade de código |
 
@@ -205,21 +207,56 @@ URL base local: `http://localhost:8081`
 
 > Rotas `GET` listadas em "Autenticação e segurança" são públicas; as demais exigem o header `Authorization: Bearer <token>`.
 
+### Contrato consumido pelo frontend
+
+JSON em UTF-8, com `Content-Type: application/json` nas requisições com corpo. IDs de banco são identificadores próprios; não correspondem aos IDs do catálogo demonstrativo do navegador.
+
+| Operação | Entrada / resposta usada |
+|---|---|
+| `POST /api/auth/cadastro` | `{nome, email, senha}`; nome obrigatório, e-mail válido, senha com pelo menos 8 caracteres; sucesso 201, validação 400, duplicado 409 |
+| `POST /api/auth/login` | `{email, senha}` → `{token, id, nome, email}`; sucesso 200, credenciais inválidas 401 |
+| `GET /api/linhas` | Array de `{id, codigo, nome, empresa, ativa, zona, campus}`; `[]` é sucesso sem registros |
+| `GET /api/horarios/linha/{id}` | Array de horários com `hora` (`HH:mm`), `diaSemana` (`MONDAY` etc.), `sentido` (`IDA`, `VOLTA`/`RETORNO`) e `ativo` |
+| `GET /api/paradas/linha/{id}` | Array com `id`, `nome`, `endereco`, `ativa` e associação às linhas |
+
+O cliente retorna `{data, status}` ao consumidor. Erros de negócio da API usam `{mensagem}`; validações usam um mapa campo → mensagem. Respostas de segurança podem não conter JSON. O frontend encerra a sessão em 401 fora do login e apresenta falta de permissão em 403. Atualmente o backend responde 403 ao acesso anônimo/inválido a endpoints protegidos, e 401 para credenciais incorretas no login.
+
+### Evolução AV1 → AV2
+
+| Área | AV1 / base local | AV2 atual |
+|---|---|---|
+| Catálogo | Dados em `src/data` | Listagem e detalhes consultam API própria; fallback explícito |
+| Horários e paradas | Campos locais | Endpoints dedicados, carregamento, erro, ausência de cadastro e nova tentativa |
+| Autenticação | Navegação inicial | Cadastro/login JWT, restauração de sessão, logout e rotas protegidas |
+| HTTP | Dados locais | `fetch` centralizado, URL-base configurável e tratamento 401/403 |
+| Apresentação | Rotas demonstrativas | H2 local com 30 rotas e 300 horários; referência clara de demonstração |
+| Home, Faculdades, favoritos e avisos | Dados/armazenamento local | Mantidos; sincronização completa com backend é uma limitação declarada |
+| Mapa | Simulação | Simulação preservada, sem alegação de GPS real |
+| Qualidade | Testes de regras locais | Regressões de integração, autenticação, segurança e carga local |
+
 ---
 
 ## Localização e simulador GPS
 
-O `SimuladorGpsService` usa `@Scheduled(fixedRate = 10000)` para aplicar uma pequena variação de latitude/longitude nos ônibus a cada **10 segundos**, simulando movimento real. O frontend exibe essas posições no mapa (Leaflet), e `GET /api/linhas/{id}/localizacao` retorna a posição atual dos ônibus da linha.
-
-Há também rotas de demonstração no frontend (`data/rotasGpsDemo.js`) usadas pelo componente `MapaLinhaDemo`.
+O `SimuladorGpsService` mantém uma simulação independente no backend; `GET /api/linhas/{id}/localizacao` disponibiliza posições simuladas. O mapa atual **não consome esse endpoint**: usa `data/rotasGpsDemo.js` e `MapaLinhaDemo` para interpolar coordenadas aproximadas do trajeto selecionado. Não representa GPS real, velocidade real ou percurso pelas ruas. O intervalo da animação é cancelado ao desmontar o componente ou pausar a simulação.
 
 ---
 
 ## Dados e persistência
 
-- **Local:** H2 em memória, com console em `/h2-console`. Os dados são recriados a cada execução e populados por `data.sql` e `LinhasExemploInitializer`.
+- **Local:** H2 em memória, com console em `/h2-console`. `DadosLocaisInitializer` carrega 30 rotas e 300 horários demonstrativos (ida e volta de segunda a sexta). A carga só ocorre se não houver linhas. Reiniciar o servidor apaga contas e dados desse banco em memória.
 - **Produção (Render):** PostgreSQL, configurado pelo perfil `render`.
-- **Favoritos e avisos** também usam `localStorage` no frontend como apoio.
+- **Favoritos e avisos:** as telas atuais persistem em `localStorage`; não estão sincronizadas com os endpoints correspondentes. São dados por navegador, não por conta.
+- **Home e Faculdades:** continuam utilizando o catálogo local. Links com `?fonte=local` preservam essa identidade; um ID local nunca é usado como se fosse o mesmo ID da API.
+- **Linhas e Detalhes:** usam o catálogo da API, com consultas específicas de horários e paradas. Uma lista vazia válida é exibida como vazia; não ativa contingência.
+
+### Contingência para apresentação
+
+Se o catálogo remoto falhar por rede ou erro recuperável, a listagem informa o problema e oferece o catálogo local e o botão **Tentar novamente**. Ao recuperar a conexão, o botão consulta novamente a API. Os detalhes remotos não são substituídos por outra rota local com ID coincidente: exibem erro e nova tentativa. Respostas 401/403 não ativam contingência.
+
+Horários são consultados apenas para as linhas visíveis e apresentados para o dia atual. A ausência de cadastro não é preenchida com horários inventados. O mapa pode depender da internet para os blocos do OpenStreetMap, mesmo em modo local.
+
+O snapshot do backend em `src/main/resources/demo/linhas.json` vem dos dados do frontend. Para atualizá-lo, execute na pasta `unibus-frontend`: `node scripts/exportar-dados-demo.mjs`. Cidades sem pontos cadastrados mostram uma referência explícita de embarque a confirmar. Essa carga é exclusiva do perfil `local`, não preenche o banco publicado.
 
 Veja [`docs/estrutura-dados-persistencia.md`](docs/estrutura-dados-persistencia.md).
 
@@ -228,7 +265,7 @@ Veja [`docs/estrutura-dados-persistencia.md`](docs/estrutura-dados-persistencia.
 ## Como executar localmente
 
 ### Pré-requisitos
-- Node.js 18+ e npm
+- Node.js 22.12+ (ou 24 LTS) e npm
 - Java 17+ (o Maven wrapper já está incluso)
 
 ### 1. Clonar
@@ -262,7 +299,7 @@ Abre em `http://localhost:5173`.
 |---|---|---|
 | `PORT` | Porta do servidor | `8081` |
 | `SPRING_PROFILES_ACTIVE` | `local` ou `render` | `local` |
-| `UNIBUS_JWT_SECRET` | Segredo do JWT (**defina em produção**) | valor de desenvolvimento |
+| `UNIBUS_JWT_SECRET` | Chave Base64 de pelo menos 32 bytes (**obrigatória em produção**, também aceita `JWT_SECRET` no Render) | chave aleatória temporária apenas no perfil local |
 | `JWT_EXPIRATION_MS` | Validade do token | `86400000` |
 | `UNIBUS_CORS_ALLOWED_ORIGINS` | Origens permitidas no CORS | localhost e Vercel |
 | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Conexão PostgreSQL (perfil `render`) | — |
@@ -272,6 +309,8 @@ Abre em `http://localhost:5173`.
 |---|---|
 | `VITE_API_URL` | URL base do backend, sem `/api` (ex.: `http://localhost:8081`) |
 
+Exemplos disponíveis em `unibus-frontend/.env.example` e `unibus-backend/.env.example`. Vite carrega o `.env` do frontend; Spring Boot exige variáveis exportadas no processo, na IDE ou no painel da hospedagem. Variáveis `VITE_*` são públicas: nunca coloque senhas ou chaves nelas. `.env` e arquivos de credenciais são ignorados pelo Git.
+
 ---
 
 ## Testes
@@ -280,11 +319,15 @@ Abre em `http://localhost:5173`.
 # Backend
 cd unibus-backend && ./mvnw test
 
-# Frontend (lint)
-cd unibus-frontend && npm run lint
+# Frontend (em outro terminal, partindo da raiz)
+cd unibus-frontend
+npm ci
+npm test
+npm run lint
+npm run build
 ```
 
-Testes existentes: `SimuladorGpsServiceTest`, `AlertaCaronaServiceTest`, `AvisoServiceTest`, `UnibusBackendApplicationTests` e `linhaService.test.js`.
+Os testes do frontend cobrem busca, horários, origem dos dados, contingência, respostas 401/403 e sessão. O backend inclui testes de controllers, simulador e carga local, com consulta dos endpoints e verificação de que a carga não duplica registros. O roteiro de apresentação e as pendências externas estão em [docs/entrega-av2.md](docs/entrega-av2.md).
 
 ### Exemplo rápido de API
 ```bash

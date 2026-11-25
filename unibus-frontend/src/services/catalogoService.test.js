@@ -1,11 +1,21 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { carregarCatalogo, linkDetalhes, normalizarLinha, resumirHorarios } from './catalogoService.js'
+import { carregarCatalogo, linkDetalhes, normalizarLinha, resumirHorarios, nomesPontosEmbarque } from './catalogoService.js'
 import { buscarLinhas } from './linhaService.js'
 import { criarRotaDemo } from '../data/rotasGpsDemo.js'
 
 const sucesso = data => ({ getLinhas: async () => ({ data }) })
 const falha = error => ({ getLinhas: async () => { throw error } })
+
+test('orientação demonstrativa de retorno não entra na lista nem na contagem de pontos', () => {
+  const pontos = nomesPontosEmbarque([
+    { nome: 'Banco do Brasil', ativa: true },
+    { nome: 'Garagem Municipal', ativa: true },
+    { nome: 'Retorno: confirmar embarque com o motorista', ativa: true },
+    { nome: 'Ponto desativado', ativa: false },
+  ])
+  assert.deepEqual(pontos, ['Banco do Brasil', 'Garagem Municipal'])
+})
 
 test('catálogo aceita lista vazia sem trocar por dados locais', async () => {
   const catalogo = await carregarCatalogo({ permitirLocal: true }, sucesso([]))

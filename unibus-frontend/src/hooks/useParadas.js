@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { unibusService } from '../services/unibusService'
+import { nomesPontosEmbarque } from '../services/catalogoService'
 
 export default function useParadas(id, fonte) {
   const [tentativa, setTentativa] = useState(0)
@@ -11,7 +12,7 @@ export default function useParadas(id, fonte) {
     unibusService.getParadasPorLinha(id, { signal: controller.signal })
       .then(({ data }) => {
         if (!Array.isArray(data)) throw new Error('Resposta inválida de pontos de embarque.')
-        if (!controller.signal.aborted) setResultado({ chave, pontos: data.filter(p => p.ativa !== false).map(p => p.nome) })
+        if (!controller.signal.aborted) setResultado({ chave, pontos: nomesPontosEmbarque(data) })
       })
       .catch(error => {
         if (!controller.signal.aborted) setResultado({ chave, pontos: [], erro: error.message })
