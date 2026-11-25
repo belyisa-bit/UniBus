@@ -10,7 +10,7 @@ function Login() {
 
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
-  const [erro, setErro] = useState("")
+  const [erro, setErro] = useState(location.state?.motivo || "")
   const [sucesso, setSucesso] = useState(false)
   const [carregando, setCarregando] = useState(false)
 
@@ -72,7 +72,7 @@ function Login() {
           <button
             type="button"
             className="login-button"
-            onClick={() => navigate(location.state?.from?.pathname || "/home", { replace: true })}
+            onClick={() => navigate((location.state?.from ? `${location.state.from.pathname}${location.state.from.search || ""}${location.state.from.hash || ""}` : "/home"), { replace: true })}
           >
             Ir para o UniBus
           </button>

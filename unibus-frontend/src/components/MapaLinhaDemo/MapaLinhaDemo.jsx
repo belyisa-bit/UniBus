@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { divIcon } from "leaflet"
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet"
-import { rotasGpsDemo } from "../../data/rotasGpsDemo"
+import { criarRotaDemo } from "../../data/rotasGpsDemo"
 import "leaflet/dist/leaflet.css"
 import "./MapaLinhaDemo.css"
 
@@ -118,8 +118,8 @@ function MapaSimulado({ rota }) {
   )
 }
 
-export default function MapaLinhaDemo({ rotaId }) {
-  const rota = rotasGpsDemo.find((item) => item.rotaId === rotaId)
+export default function MapaLinhaDemo({ linha }) {
+  const rota = useMemo(() => criarRotaDemo(linha), [linha])
   return (
     <section className="mapa-linha-demo" aria-labelledby="mapa-demo-titulo">
       <div className="mapa-demo-heading">
@@ -128,7 +128,7 @@ export default function MapaLinhaDemo({ rotaId }) {
       </div>
       <p id="mapa-demo-descricao" className="mapa-demo-descricao">Posição simulada para demonstração do sistema. Pontos aproximados e traçado ilustrativo; não representa GPS real nem o caminho pelas ruas.</p>
       {rota?.percurso.length > 1
-        ? <MapaSimulado key={rotaId} rota={rota} />
+        ? <MapaSimulado key={`${linha.id}:${linha.nome}`} rota={rota} />
         : <p className="mapa-demo-aviso">Mapa demonstrativo ainda não disponível para esta rota.</p>}
     </section>
   )

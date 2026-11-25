@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   lerAvisosSalvos,
   adicionarAviso,
@@ -6,15 +6,43 @@ import {
 import { linhas } from "../data/linhas"
 import "../styles/Avisos.css"
 
+function SeletorAviso({ id, label, value, placeholder, options, onChange }) {
+  const textoSelecionado = options.find((option) => option.value === value)?.label
+
+  return (
+    <div className="aviso-campo">
+      <label id={`${id}-label`}>{label}</label>
+
+      <details className="aviso-seletor">
+        <summary aria-labelledby={`${id}-label`}>
+          <span className={value ? "" : "aviso-seletor-placeholder"}>
+            {textoSelecionado || placeholder}
+          </span>
+        </summary>
+
+        <div className="aviso-opcoes" role="listbox" aria-labelledby={`${id}-label`}>
+          {options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              value={option.value}
+              className={option.value === value ? "selecionado" : ""}
+              onClick={onChange}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </details>
+    </div>
+  )
+}
+
 function Avisos() {
-  const [avisos, setAvisos] = useState([])
+  const [avisos, setAvisos] = useState(lerAvisosSalvos)
   const [linha, setLinha] = useState("")
   const [tipo, setTipo] = useState("")
   const [descricao, setDescricao] = useState("")
-
-  useEffect(() => {
-    setAvisos(lerAvisosSalvos())
-  }, [])
 
   function enviarAviso(event) {
     event.preventDefault()
@@ -41,37 +69,6 @@ function Avisos() {
     event.currentTarget.closest("details").open = false
   }
 
-  function SeletorAviso({ id, label, value, placeholder, options, onChange }) {
-    const textoSelecionado = options.find((option) => option.value === value)?.label
-
-    return (
-      <div className="aviso-campo">
-        <label id={`${id}-label`}>{label}</label>
-
-        <details className="aviso-seletor">
-          <summary aria-labelledby={`${id}-label`}>
-            <span className={value ? "" : "aviso-seletor-placeholder"}>
-              {textoSelecionado || placeholder}
-            </span>
-          </summary>
-
-          <div className="aviso-opcoes" role="listbox" aria-labelledby={`${id}-label`}>
-            {options.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                value={option.value}
-                className={option.value === value ? "selecionado" : ""}
-                onClick={onChange}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        </details>
-      </div>
-    )
-  }
 
   return (
     <main className="avisos-page">

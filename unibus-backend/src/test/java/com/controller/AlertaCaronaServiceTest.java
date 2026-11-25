@@ -5,6 +5,12 @@ import com.unibus.model.AlertaCarona;
 import com.unibus.service.AlertaCaronaService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.context.annotation.Import;
+import com.unibus.config.SecurityConfig;
+import com.unibus.security.JwtService;
+import com.unibus.repository.UsuarioRepository;
+import com.unibus.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,8 +26,22 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Import(SecurityConfig.class)
 @WebMvcTest(AlertaCaronaController.class)
 class AlertaCaronaControllerTest {
+
+    @MockBean private JwtService jwtService;
+    @MockBean private UsuarioRepository usuarioRepository;
+
+    @BeforeEach
+    void autenticarRequisicoesDeEscrita() {
+        var usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setEmail("teste@example.com");
+        when(jwtService.extrairEmail("token-teste")).thenReturn(usuario.getEmail());
+        when(jwtService.validarToken("token-teste", usuario.getEmail())).thenReturn(true);
+        when(usuarioRepository.findByEmail(usuario.getEmail())).thenReturn(java.util.Optional.of(usuario));
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -73,7 +93,7 @@ class AlertaCaronaControllerTest {
 
         when(alertaCaronaService.criar(any(AlertaCarona.class))).thenReturn(criado);
 
-        mockMvc.perform(post("/api/alertas-carona")
+        mockMvc.perform(post("/api/alertas-carona").header("Authorization", "Bearer token-teste")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isCreated())
@@ -86,7 +106,7 @@ class AlertaCaronaControllerTest {
         AlertaCarona alerta = new AlertaCarona(1L, "Carona", "A", "B", "Obs", 1, LocalDateTime.now(), LocalDateTime.now(), true);
         when(alertaCaronaService.buscarPorId(1L)).thenReturn(Optional.of(alerta));
 
-        mockMvc.perform(patch("/api/alertas-carona/1/desativar"))
+        mockMvc.perform(patch("/api/alertas-carona/1/desativar").header("Authorization", "Bearer token-teste"))
                 .andExpect(status().isNoContent());
     }
 }

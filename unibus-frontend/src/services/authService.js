@@ -1,4 +1,4 @@
-import api from './api';
+import api from './api.js';
 
 export const authService = {
   login: (dados) => api.post('/auth/login', dados),

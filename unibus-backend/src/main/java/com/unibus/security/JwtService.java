@@ -21,11 +21,17 @@ public class JwtService {
 
     public JwtService(
             @Value("${security.jwt.secret}") String secret,
-            @Value("${security.jwt.expiration-ms}") long expirationMs) {
+            @Value("${security.jwt.expiration-ms}") long expirationMs,
+            @Value("${security.jwt.allow-ephemeral:false}") boolean allowEphemeral) {
 
-        this.secretKey = Keys.hmacShaKeyFor(
-            Decoders.BASE64.decode(secret)
-        );
+        if (secret == null || secret.isBlank()) {
+            if (!allowEphemeral) {
+                throw new IllegalArgumentException("Configure uma chave JWT Base64 de pelo menos 32 bytes.");
+            }
+            this.secretKey = Jwts.SIG.HS256.key().build();
+        } else {
+            this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        }
 
         this.expirationMs = expirationMs;
     }

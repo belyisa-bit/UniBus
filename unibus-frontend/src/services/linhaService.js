@@ -41,7 +41,7 @@ export function buscarLinhas(linhas, termo) {
 
   return linhas.filter((linha) => {
     const texto = normalizarTexto(
-      `${String(linha.id).padStart(2, "0")} ${linha.nome} ${abreviarOrigem(linha.origem)} ${formatarTrajeto(linha)}`
+      `${String(linha.id).padStart(2, "0")} ${linha.nome} ${linha.empresa || ""} ${abreviarOrigem(linha.origem)} ${formatarTrajeto(linha)}`
     )
     return termos.every((palavra) => texto.includes(palavra))
   })

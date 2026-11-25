@@ -2,37 +2,54 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import Badge from "../components/Badge/Badge"
 import Card from "../components/Card/Card"
 import MapaLinhaDemo from "../components/MapaLinhaDemo/MapaLinhaDemo"
-import { linhas } from "../data/linhas"
+import useCatalogo from "../hooks/useCatalogo"
+import useHorarios from "../hooks/useHorarios"
+import useParadas from "../hooks/useParadas"
+import { linkDetalhes } from "../services/catalogoService"
+import Button from "../components/Button/Button"
 import { obterFaculdades, obterPontosEmbarque, ordenarLinhasPorOrigem } from "../services/linhaService"
 import "../styles/DetalhesLinha.css"
-
-const linhasOrdenadas = ordenarLinhasPorOrigem(linhas)
-const cidades = [...new Set(linhasOrdenadas.map((linha) => linha.origem))]
 
 function DetalhesLinha() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { linhas, fonte, estado, erro, tentarNovamente } = useCatalogo(searchParams.get("fonte") === "local" ? "local" : "api")
+  const linhasOrdenadas = ordenarLinhasPorOrigem(linhas)
+  const cidades = [...new Set(linhasOrdenadas.map(item => item.origem))]
   const linha = linhas.find((item) => String(item.id) === id)
-  const pontosEmbarque = linha ? obterPontosEmbarque(linha) : []
+  const horarios = useHorarios(linha ? [linha.id] : [], fonte)
+  const paradas = useParadas(linha?.id, fonte)
+  const pontosEmbarque = fonte === "api" ? paradas.pontos : linha ? obterPontosEmbarque(linha) : []
   const cidadeInformada = searchParams.get("cidade") ?? ""
   const cidade = linha?.origem ?? (cidades.includes(cidadeInformada) ? cidadeInformada : "")
   const rotasDaCidade = linhasOrdenadas.filter((item) => item.origem === cidade)
 
+  const fonteQuery = fonte === "local" ? "&fonte=local" : ""
+
   function selecionarCidade(event) {
     const origem = event.target.value
-    navigate(origem ? `/rotas?cidade=${encodeURIComponent(origem)}` : "/rotas")
+    navigate(`/linhas?zona=${encodeURIComponent(origem)}${fonteQuery}`)
   }
 
   function selecionarRota(event) {
     const rotaId = event.target.value
-    navigate(rotaId ? `/linhas/${rotaId}` : `/rotas?cidade=${encodeURIComponent(cidade)}`)
+    navigate(rotaId ? linkDetalhes(rotaId, fonte) : `/linhas?zona=${encodeURIComponent(cidade)}${fonteQuery}`)
+  }
+
+  if (estado === "carregando" || estado === "erro") {
+    return <main className="detalhes-linha-page">
+      <Link className="detalhes-voltar" to={fonte === "local" ? "/linhas?fonte=local" : "/linhas"}>← Ver linhas disponíveis</Link>
+      {estado === "carregando"
+        ? <p role="status">Carregando detalhes da linha…</p>
+        : <div role="alert"><p>{erro}</p><Button onClick={tentarNovamente}>Tentar novamente</Button></div>}
+    </main>
   }
 
   if (id && !linha) {
     return (
       <main className="detalhes-linha-page">
-        <Link className="detalhes-voltar" to="/linhas">← Ver linhas disponíveis</Link>
+        <Link className="detalhes-voltar" to={fonte === "local" ? "/linhas?fonte=local" : "/linhas"}>← Ver linhas disponíveis</Link>
         <div className="detalhes-heading">
           <h1>Linha não encontrada</h1>
           <p>Escolha uma das linhas disponíveis para consultar os detalhes.</p>
@@ -43,8 +60,10 @@ function DetalhesLinha() {
 
   return (
     <main className="detalhes-linha-page">
-      <Link className="detalhes-voltar" to="/linhas">← Voltar para linhas</Link>
+      <Link className="detalhes-voltar" to={fonte === "local" ? "/linhas?fonte=local" : "/linhas"}>← Voltar para linhas</Link>
 
+      {fonte === "local" && <p role="status">Rota demonstrativa com dados locais.</p>}
+      {linha?.demonstrativa && <p role="status">Dados demonstrativos locais. Horários de segunda a sexta; confirme a operação e os pontos com o motorista.</p>}
       <div className="detalhes-heading">
         <h1>Detalhes da linha</h1>
         <p>Selecione a cidade e a rota para conferir sua ida e volta.</p>
@@ -120,9 +139,12 @@ function DetalhesLinha() {
                     ))}
                   </ol>
                 ) : (
-                  <p className="detalhes-sem-pontos">Pontos de embarque ainda não cadastrados.</p>
+                  <p className="detalhes-sem-pontos" role={paradas.erro ? "alert" : "status"}>
+                    {fonte === "api" && paradas.carregando ? "Carregando pontos de embarque…" : paradas.erro || "Pontos de embarque ainda não cadastrados."}
+                  </p>
                 )}
 
+                {paradas.erro && fonte === "api" && <Button onClick={paradas.tentarNovamente}>Tentar novamente</Button>}
                 <div className="detalhes-etapa-heading detalhes-destinos-heading">
                   <h3 id="destinos-titulo">Faculdades atendidas</h3>
                 </div>
@@ -147,20 +169,21 @@ function DetalhesLinha() {
             <div className="detalhes-lateral">
               <section className="detalhes-horarios" aria-labelledby="horarios-titulo">
                 <Card>
-                  <h2 id="horarios-titulo">Horários</h2>
+                  <h2 id="horarios-titulo">Horários{fonte === "api" ? " de hoje" : ""}</h2>
+                  {horarios.temErro && <div role="alert">Não foi possível consultar os horários. {horarios.erro} <Button onClick={horarios.tentarNovamente}>Tentar novamente</Button></div>}
                   <dl className="detalhes-horarios-lista">
                     <div>
                       <dt>Saída</dt>
-                      <dd><time dateTime={linha.horarioSaida}>{linha.horarioSaida}</time></dd>
+                      <dd>{horarios.texto(linha, "horarioSaida")}</dd>
                     </div>
                     <div>
                       <dt>Retorno</dt>
-                      <dd><time dateTime={linha.horarioRetorno}>{linha.horarioRetorno}</time></dd>
+                      <dd>{horarios.texto(linha, "horarioRetorno")}</dd>
                     </div>
                   </dl>
                 </Card>
               </section>
-              <MapaLinhaDemo rotaId={linha.id} />
+              <MapaLinhaDemo linha={linha} />
             </div>
           </div>
         </>

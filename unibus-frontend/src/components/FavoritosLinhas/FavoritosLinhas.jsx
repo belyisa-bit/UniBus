@@ -94,7 +94,7 @@ export default function FavoritosLinhas() {
           {favoritos.map((linha) => (
             <li key={linha.id}>
               <div className="favoritos-info">
-                <Link to={`/linhas/${linha.id}`} aria-label={`Ver detalhes de ${linha.nome}`}>{linha.nome}</Link>
+                <Link to={`/linhas/${linha.id}?fonte=local`} aria-label={`Ver detalhes de ${linha.nome}`}>{linha.nome}</Link>
                 <p>{obterFaculdades(linha).join(" → ")}</p>
               </div>
               <button type="button" className="favoritos-remover" aria-label={`Remover ${linha.nome} dos favoritos`} onClick={() => remover(linha)}>Remover</button>

@@ -1,11 +1,11 @@
 import { Link, useSearchParams } from "react-router-dom"
-import { useCallback, useEffect, useState } from "react"
 import Card from "../components/Card/Card"
 import Button from "../components/Button/Button"
 import Badge from "../components/Badge/Badge"
 import FavoritosLinhas from "../components/FavoritosLinhas/FavoritosLinhas"
-import { linhas } from "../data/linhas"
-import { unibusService } from "../services/unibusService"
+import useCatalogo from "../hooks/useCatalogo"
+import useHorarios from "../hooks/useHorarios"
+import { linkDetalhes } from "../services/catalogoService"
 import {
   abreviarOrigem,
   buscarLinhas,
@@ -18,50 +18,13 @@ import "../styles/Linhas.css"
 const LINHAS_POR_PAGINA = 10
 function Linhas() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [linhasApi, setLinhasApi] = useState(null)
-  const [estado, setEstado] = useState("carregando")
-
-  const carregarLinhas = useCallback(async () => {
-    try {
-      const { data } = await unibusService.getLinhas()
-      if (!Array.isArray(data) || data.length === 0) throw new Error("A API não retornou linhas")
-      const normalizadas = data.map((item) => {
-        const partes = (item.nome || "").split(" → ")
-        const faculdades = item.campus?.length ? item.campus : partes.slice(1)
-        const origem = item.zona || partes[0] || item.nome || "Linha"
-        return {
-          id: item.id,
-          nome: item.codigo ? `${item.codigo} · ${item.nome}` : item.nome || `Linha ${item.id}`,
-          origem,
-          faculdades,
-          faculdade: faculdades[0],
-          horarioSaida: item.horarioSaida || "—",
-          horarioRetorno: item.horarioRetorno || "—",
-          status: item.ativa === false ? "Fora de operação" : "Em operação",
-        }
-      })
-      setLinhasApi(normalizadas)
-      setEstado("sucesso")
-    } catch {
-      setLinhasApi(null)
-      setEstado("contingencia")
-    }
-  }, [])
-
-  useEffect(() => {
-    Promise.resolve().then(carregarLinhas)
-  }, [carregarLinhas])
-
-  function tentarNovamente() {
-    setEstado("carregando")
-    carregarLinhas()
-  }
-
-  const linhasAtuais = linhasApi || linhas
+  const { linhas: linhasAtuais, fonte, estado, erro, tentarNovamente } = useCatalogo(
+    searchParams.get("fonte") === "local" ? "local" : "api", true
+  )
   const linhasOrdenadas = ordenarLinhasPorOrigem(linhasAtuais)
 
   const busca = searchParams.get("busca") ?? ""
-  const zonaSelecionada = searchParams.get("zona") ?? ""
+  const zonaSelecionada = searchParams.get("zona") ?? searchParams.get("cidade") ?? ""
   const campusSelecionado = searchParams.get("campus") ?? ""
 
   const zonas = [...new Set(linhasAtuais.map((linha) => linha.origem))].sort((a, b) =>
@@ -103,6 +66,8 @@ function Linhas() {
     inicio + LINHAS_POR_PAGINA
   )
 
+  const horarios = useHorarios(linhasVisiveis.map(linha => linha.id), fonte)
+
   function linkPagina(numero) {
     const params = new URLSearchParams(searchParams)
     params.set("pagina", String(numero))
@@ -132,6 +97,7 @@ function Linhas() {
       (params) => {
         const proximosParams = new URLSearchParams(params)
         proximosParams.delete("pagina")
+        if (nome === "zona") proximosParams.delete("cidade")
 
         if (valor) {
           proximosParams.set(nome, valor)
@@ -154,21 +120,12 @@ function Linhas() {
           <Button onClick={tentarNovamente}>Tentar novamente</Button>
         </div>
       )}
-      {estado === "sucesso" && <p className="linhas-feedback" role="status">Linhas atualizadas pela API.</p>}
+      {linhasAtuais.some(linha => linha.demonstrativa) && <p className="linhas-feedback">Dados demonstrativos locais. Horários de segunda a sexta; confirme a operação com o motorista.</p>}
+      {estado === "erro" && <div className="linhas-feedback" role="alert">{erro} <Button onClick={tentarNovamente}>Tentar novamente</Button></div>}
+      {estado === "local" && <p className="linhas-feedback" role="status">Exibindo rotas demonstrativas locais.</p>}
+      {horarios.temErro && <div className="linhas-feedback" role="alert">Não foi possível consultar os horários. {horarios.erro} <Button onClick={horarios.tentarNovamente}>Tentar novamente</Button></div>}
       <section className="linhas-heading">
         <p className="linhas-eyebrow">TRANSPORTE UNIVERSITÁRIO</p>
-        <h1>Linhas de ônibus</h1>
-        <p>Consulte as linhas disponíveis e encontre a opção para o seu trajeto.</p>
-        <label className="linhas-search">
-          <span aria-hidden="true">⌕</span>
-          <input
-            type="search"
-            value={busca}
-            onChange={atualizarBusca}
-            placeholder="Busque por código, nome ou empresa"
-            aria-label="Buscar linha por código, nome ou empresa"
-          />
-        </label>
       </section>
 
       <div className="linhas-intro">
@@ -242,7 +199,7 @@ function Linhas() {
             }`}
       </p>
 
-      {estado === "carregando" ? null : resultados.length === 0 ? (
+      {(estado === "carregando" || estado === "erro") ? null : resultados.length === 0 ? (
         <div className="linhas-empty">
           <h2>Nenhuma linha encontrada</h2>
           <p>Tente outra cidade ou nome de faculdade.</p>
@@ -303,27 +260,23 @@ function Linhas() {
 
                 <dl className="linha-metrics">
                   <div>
-                    <dt>Saída</dt>
+                    <dt>Saída{fonte === "api" ? " (hoje)" : ""}</dt>
                     <dd>
-                      <time dateTime={linha.horarioSaida}>
-                        {linha.horarioSaida}
-                      </time>
+                      <span>{horarios.texto(linha, "horarioSaida")}</span>
                     </dd>
                   </div>
 
                   <div>
-                    <dt>Retorno</dt>
+                    <dt>Retorno{fonte === "api" ? " (hoje)" : ""}</dt>
                     <dd>
-                      <time dateTime={linha.horarioRetorno}>
-                        {linha.horarioRetorno}
-                      </time>
+                      <span>{horarios.texto(linha, "horarioRetorno")}</span>
                     </dd>
                   </div>
                 </dl>
 
                 <Link
                   className="linha-details"
-                  to={`/linhas/${linha.id}`}
+                  to={linkDetalhes(linha.id, fonte)}
                   aria-label={`Ver detalhes da linha ${String(
                     linha.id
                   ).padStart(2, "0")}: ${formatarTrajeto(linha)}`}
