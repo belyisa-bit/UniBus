@@ -4,10 +4,12 @@ import com.unibus.model.Linha;
 import com.unibus.repository.LinhaRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
 @Component
+@Profile("!local")
 public class LinhasExemploInitializer implements CommandLineRunner {
 
     private final LinhaRepository linhaRepository;

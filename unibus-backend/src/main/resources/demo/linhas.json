@@ -1,0 +1,446 @@
+[
+  {
+    "origem": "Goiana",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:00",
+    "id": 2,
+    "nome": "Rota 1 Goiana",
+    "faculdades": [
+      "UNINASSAU (Graças)",
+      "UNIBRA",
+      "UNICAP",
+      "ESTÁCIO (Abdias de Carvalho)"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Em frente à Faculdade de Goiana",
+      "Centro",
+      "Posto Shell"
+    ]
+  },
+  {
+    "origem": "Goiana",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:00",
+    "id": 1,
+    "nome": "Rota 2 Goiana",
+    "faculdades": [
+      "IFPE",
+      "UFPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Em frente à Faculdade de Goiana",
+      "Centro",
+      "Posto Shell"
+    ]
+  },
+  {
+    "origem": "Goiana",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:00",
+    "id": 5,
+    "nome": "Goiana → UFRPE",
+    "faculdades": [
+      "UFRPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Em frente à Faculdade de Goiana",
+      "Centro",
+      "Posto Shell"
+    ]
+  },
+  {
+    "origem": "Condado",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:30",
+    "id": 9,
+    "nome": "Rota 1 Condado",
+    "faculdades": [
+      "ESTÁCIO (Abdias de Carvalho)",
+      "UNINASSAU (Graças)"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Banco do Brasil",
+      "Garagem Municipal"
+    ]
+  },
+  {
+    "origem": "Condado",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:30",
+    "id": 12,
+    "nome": "Rota 2 Condado",
+    "faculdades": [
+      "UFRPE",
+      "UFPE",
+      "IFPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Banco do Brasil",
+      "Garagem Municipal"
+    ]
+  },
+  {
+    "origem": "Condado",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:30",
+    "id": 11,
+    "nome": "Rota 3 Condado",
+    "faculdades": [
+      "UNIBRA"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Banco do Brasil",
+      "Garagem Municipal"
+    ]
+  },
+  {
+    "origem": "Carpina",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 18,
+    "nome": "Rota 1 Carpina",
+    "faculdades": [
+      "UNIBRA",
+      "UNICAP"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Casa Rosa",
+      "2001",
+      "Trevo"
+    ]
+  },
+  {
+    "origem": "Carpina",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 16,
+    "nome": "Rota 2 Carpina",
+    "faculdades": [
+      "UNINASSAU (Graças)",
+      "ESTÁCIO (Abdias de Carvalho)"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Casa Rosa",
+      "2001",
+      "Trevo"
+    ]
+  },
+  {
+    "origem": "Carpina",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 15,
+    "nome": "Rota 3 Carpina",
+    "faculdades": [
+      "UFPE",
+      "IFPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Casa Rosa",
+      "2001",
+      "Trevo"
+    ]
+  },
+  {
+    "origem": "Carpina",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 19,
+    "nome": "Carpina → UFRPE",
+    "faculdades": [
+      "UFRPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Casa Rosa",
+      "2001",
+      "Trevo"
+    ]
+  },
+  {
+    "origem": "Aliança",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:30",
+    "id": 25,
+    "nome": "Rota 1 Aliança",
+    "faculdades": [
+      "UNIBRA",
+      "ESTÁCIO (Abdias de Carvalho)",
+      "UNINASSAU (Graças)",
+      "UNICAP"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Trevo",
+      "Rodoviária de Aliança",
+      "Praça do Clube"
+    ]
+  },
+  {
+    "origem": "Aliança",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:30",
+    "id": 27,
+    "nome": "Rota 2 Aliança",
+    "faculdades": [
+      "IFPE",
+      "UFPE",
+      "UFRPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": [
+      "Trevo",
+      "Rodoviária de Aliança",
+      "Praça do Clube"
+    ]
+  },
+  {
+    "origem": "Paudalho",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 30,
+    "nome": "Rota 1 Paudalho",
+    "faculdades": [
+      "UNINASSAU (Graças)",
+      "UNIBRA",
+      "UNICAP",
+      "ESTÁCIO (Abdias de Carvalho)"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Paudalho",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 29,
+    "nome": "Rota 2 Paudalho",
+    "faculdades": [
+      "IFPE",
+      "UFPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Paudalho",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 33,
+    "nome": "Paudalho → UFRPE",
+    "faculdades": [
+      "UFRPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Limoeiro",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:50",
+    "id": 37,
+    "nome": "Rota 1 Limoeiro",
+    "faculdades": [
+      "UNINASSAU (Graças)",
+      "UNIBRA",
+      "UNICAP",
+      "ESTÁCIO (Abdias de Carvalho)"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Limoeiro",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:50",
+    "id": 36,
+    "nome": "Rota 2 Limoeiro",
+    "faculdades": [
+      "IFPE",
+      "UFPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Limoeiro",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:50",
+    "id": 40,
+    "nome": "Limoeiro → UFRPE",
+    "faculdades": [
+      "UFRPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Vitória de Santo Antão",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 44,
+    "nome": "Rota 1 Vitória de Santo Antão",
+    "faculdades": [
+      "UNINASSAU (Graças)",
+      "UNIBRA",
+      "UNICAP",
+      "ESTÁCIO (Abdias de Carvalho)"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Vitória de Santo Antão",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 43,
+    "nome": "Rota 2 Vitória de Santo Antão",
+    "faculdades": [
+      "IFPE",
+      "UFPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Vitória de Santo Antão",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 47,
+    "nome": "Vitória de Santo Antão → UFRPE",
+    "faculdades": [
+      "UFRPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Moreno",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 51,
+    "nome": "Rota 1 Moreno",
+    "faculdades": [
+      "UNINASSAU (Graças)",
+      "UNIBRA",
+      "UNICAP",
+      "ESTÁCIO (Abdias de Carvalho)"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Moreno",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 50,
+    "nome": "Rota 2 Moreno",
+    "faculdades": [
+      "IFPE",
+      "UFPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Moreno",
+    "horarioSaida": "17:00",
+    "horarioRetorno": "21:50",
+    "id": 54,
+    "nome": "Moreno → UFRPE",
+    "faculdades": [
+      "UFRPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Sirinhaém",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:50",
+    "id": 58,
+    "nome": "Rota 1 Sirinhaém",
+    "faculdades": [
+      "UNINASSAU (Graças)",
+      "UNIBRA",
+      "UNICAP",
+      "ESTÁCIO (Abdias de Carvalho)"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Sirinhaém",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:50",
+    "id": 57,
+    "nome": "Rota 2 Sirinhaém",
+    "faculdades": [
+      "IFPE",
+      "UFPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Sirinhaém",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:50",
+    "id": 61,
+    "nome": "Sirinhaém → UFRPE",
+    "faculdades": [
+      "UFRPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Itaquitinga",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:30",
+    "id": 65,
+    "nome": "Rota 1 Itaquitinga",
+    "faculdades": [
+      "UNINASSAU (Graças)",
+      "UNIBRA",
+      "UNICAP",
+      "ESTÁCIO (Abdias de Carvalho)"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Itaquitinga",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:30",
+    "id": 64,
+    "nome": "Rota 2 Itaquitinga",
+    "faculdades": [
+      "IFPE",
+      "UFPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  },
+  {
+    "origem": "Itaquitinga",
+    "horarioSaida": "16:00",
+    "horarioRetorno": "21:30",
+    "id": 68,
+    "nome": "Itaquitinga → UFRPE",
+    "faculdades": [
+      "UFRPE"
+    ],
+    "status": "Em operação",
+    "pontosEmbarque": []
+  }
+]

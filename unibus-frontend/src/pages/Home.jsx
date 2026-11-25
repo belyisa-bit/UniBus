@@ -213,7 +213,7 @@ function Home() {
             </p>
           )}
           {proximosOnibus.map((linha, index) => (
-            <Link key={linha.id} to={`/linhas/${linha.id}`} className="bus-row">
+            <Link key={linha.id} to={`/linhas/${linha.id}?fonte=local`} className="bus-row">
               <span className={`line-icon ${index === 0 ? "line-icon-green" : "line-icon-blue"}`}>
                 <BusIcon />
               </span>

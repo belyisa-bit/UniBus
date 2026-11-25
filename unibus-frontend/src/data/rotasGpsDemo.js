@@ -40,7 +40,7 @@ function interpolarPercurso(pontos) {
   return percurso
 }
 
-export const rotasGpsDemo = linhas.map((linha) => {
+export function criarRotaDemo(linha) {
   const origem = origensDemo[linha.origem]
   const embarques = obterPontosEmbarque(linha)
   const pontos = [
@@ -58,4 +58,6 @@ export const rotasGpsDemo = linhas.map((linha) => {
     pontos: completo ? pontos : [],
     percurso: completo ? interpolarPercurso(pontos) : [],
   }
-})
+}
+
+export const rotasGpsDemo = linhas.map(criarRotaDemo)

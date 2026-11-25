@@ -1,8 +1,10 @@
-import api from './api';
+import api from './api.js';
 
 export const unibusService = {
   // Linhas
-  getLinhas: () => api.get('/linhas'),
+  getLinhas: (options) => api.get('/linhas', options),
+  getHorariosPorLinha: (id, options) => api.get(`/horarios/linha/${id}`, options),
+  getParadasPorLinha: (id, options) => api.get(`/paradas/linha/${id}`, options),
   getLinhaPorId: (id) => api.get(`/linhas/${id}`),
   getLocalizacaoPorLinha: (id) => api.get(`/linhas/${id}/localizacao`),
 
